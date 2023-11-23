@@ -4,13 +4,20 @@ import time
 
 class Coder():
     
-    def __init__(self, s,cl, em, e, r):
+    def __init__(self,s,p,cl, em, e, r):
         self.symbole = s
+        self.position = p
         self.coding_level = cl
         self.energy_max = em
         self.energy = e
         self.richesse = r
-        
+    
+    def GetSymbol(self):
+       return self.symbole
+    
+    def GetPosition(self):
+       return self.position
+    
     def GetCodingLevel(self):
        return self.coding_level
     
@@ -34,6 +41,8 @@ class Coder():
            self.coding_level +=1
     
     def UpgradeEnergy(self,energy_amount):
+         if self.energy < 0:
+             self.energy = 0
          if self.energy < self.energy_max:
              self.energy +=energy_amount
     
@@ -60,13 +69,14 @@ class Mission():
         return self.difficulty
 
 
-    def ResetStartingWorkLoad(self,time_passed):
-        self.starting_workload -= time_passed 
+    def UpgradeStartingWorkLoad(self,amount):
+        self.starting_workload -= amount 
     
-    def GetRemainingWorkLoad(self):
+    def UpgradeRemainingWorkLoad(self):
         self.remaining_workload = 0
 
 
+    
     
 
 
