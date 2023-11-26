@@ -11,6 +11,7 @@ class Coder():
         self.energy_max = em
         self.energy = e
         self.richesse = r
+
     
     def GetSymbol(self):
        return self.symbole
@@ -30,6 +31,13 @@ class Coder():
     def GetMoneyAmount(self):
         return self.richesse
 
+
+
+
+
+     
+    def ChangePosition(self,new_position):
+       self.position = new_position
 
 
     def UpgradeCodingLevel(self):
@@ -53,11 +61,18 @@ class Coder():
 
 class Mission():
     
-    def __init__(self, sw, rw,d):
+    def __init__(self,s, sw, rw,d,p):
+        self.symbole = s
         self.starting_workload= sw
         self.remaining_worload = rw
         self.difficulty = d             
+        self.position = p
 
+    def GetSymbol(self):
+        return self.symbole
+
+    def GetPosition(self):
+        return self.position
 
     def GetStartingWorkLoad(self):
         return self.starting_workload
@@ -69,6 +84,9 @@ class Mission():
         return self.difficulty
 
 
+
+    def ChangeMission():
+        pass
     def UpgradeStartingWorkLoad(self,amount):
         self.starting_workload -= amount 
     
