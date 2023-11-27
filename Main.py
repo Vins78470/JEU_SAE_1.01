@@ -3,9 +3,8 @@ from Class import *
 # coding: utf-8
 
 
-
-
 def main():
+    
     coup_possible_coder = {'h': (-1, 0), 'b': (1, 0), 'g': (0, -1), 'd': (0, 1)}
     liste_symbole_missions = []
     liste_missions = []
@@ -31,7 +30,7 @@ def main():
         liste_missions = InitialisationMission(liste_missions,liste_symbole_missions)
 
         Board = DrawPlayerAtJobCenter(Board, liste_coder)
-        Board = DrawMission(Board,liste_missions)
+        Board = DrawMissions(Board,liste_missions)
 
         PrintBoard(Board) # Affiche la Board 
     
@@ -44,14 +43,35 @@ def main():
                 print("--------------------------------------------------------------------------------------------------------------------")
                 print("\n")
                 AfficherInfosJoueur(liste_coder)
+                print("--------------------------------------------------------------------------------------------------------------------")
+                if CheckJobCenter(Board,coder) and tour >= 2:
+                        print("Vous etes bien sur le JOB CENTER")
+                        print("\n")
+                        MakeChoiceAtJobCenter(Board,coder)
+                        
+                if IsCoderOnaMission(coder,liste_missions):
+                            
+                            print("t'es sur une mission")
+                            
+                            DepenseCoderArgentPourLaMission(coder,liste_missions)
+                            DepenseCoderEnergyPourLaMission(coder,liste_missions)
+                            DepenseRwMission(coder,liste_missions)
+                            IsFinishMission(coder,liste_missions)
+                            
+                            
 
                 print(f"Tour {tour}, Joueur {coder.GetSymbol()}")
+                
                 potential_position = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
+                print("\n")
+                
+                
                 if CheckDirectionInput(potential_position,coup_possible_coder):
+
                     potential_position = CherchePosition(potential_position,coup_possible_coder)
+                                
                     if IsMovable(potential_position,coder,liste_coder):
-                        if IsCoderOnaMission(coder,liste_missions):
-                            print("t'es sur une mission")
+
                         DeletePlayer(Board,coder)
                         DrawPlayer(Board,potential_position,coder)
                         UpdateJobCenter(Board, liste_coder)

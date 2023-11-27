@@ -1,4 +1,4 @@
-import time
+﻿import time
 
 
 
@@ -46,25 +46,32 @@ class Coder():
            
     def UpgradeEnergyMax(self):
          if self.energy_max < 10:
-           self.coding_level +=1
+           self.energy_max += 1
     
     def UpgradeEnergy(self,energy_amount):
          if self.energy < 0:
              self.energy = 0
-         if self.energy < self.energy_max:
-             self.energy +=energy_amount
+             
+         if self.energy <= self.energy_max and self.energy - energy_amount <0:
+             self.energy -=energy_amount
+         else:
+             self.energy = 0
     
-    def UpgradeMoneyAmount(self,money_amount):
-         if self.richesse < 5000 and self.richesse -money_amount >= 0:
-             self.richesse+= money_amount
-        
+    def UpgradeMoneyAmount(self, money_amount):
+
+     if self.richesse < 5000 and (self.richesse - money_amount) >= 0:
+            self.richesse += money_amount
+            return True  # Indique que la mise à jour a été effectuée avec succès
+     else:
+        print("Vous ne possédez pas assez d'argent. Votre solde doit être supérieur à " + str(money_amount) + " ฿")
+        return False  # Indique que la mise à jour n'a pas été effectuée
 
 class Mission():
     
     def __init__(self,s, sw, rw,d,p):
         self.symbole = s
         self.starting_workload= sw
-        self.remaining_worload = rw
+        self.remaining_workload = rw
         self.difficulty = d             
         self.position = p
 
@@ -79,6 +86,7 @@ class Mission():
     
     def GetRemainingWorkLoad(self):
         return self.remaining_workload
+       
     
     def GetDifficulty(self):
         return self.difficulty
@@ -87,10 +95,14 @@ class Mission():
 
     def ChangeMission():
         pass
-    def UpgradeStartingWorkLoad(self,amount):
-        self.starting_workload -= amount 
     
-    def UpgradeRemainingWorkLoad(self):
+    def UpgradeRemaningWorkLoad(self,amount):
+        self.remaining_workload += amount
+    
+    def UpgradeRemainingWorkLoad(self,amount):
+        self.starting_workload += amount
+
+    def ResetRemainingWorkLoad(self):
         self.remaining_workload = 0
 
 

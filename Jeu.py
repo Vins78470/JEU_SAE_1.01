@@ -32,7 +32,7 @@ def InitialisationJoueur(Board,liste_coder,nb_joueur):
     liste_symbole_coder = ['P1','P2','P3','P4']
     
     for i in range(nb_joueur):
-         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,1,1,0))
+         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),5,20,5,4000))
     
     return liste_coder
 
@@ -74,7 +74,7 @@ def InitialisationMission(liste_missions,liste_symbole_missions):
          random_i = random.randint(1,20)
          random_j = random.randint(1,20)
 
-         liste_missions.append(Mission(liste_symbole_missions[i],1,1,1,(random_i,random_j)))
+         liste_missions.append(Mission(liste_symbole_missions[i],5,10,8,(random_i,random_j)))
     
     return liste_missions
 
@@ -160,7 +160,7 @@ def UpdateJobCenter(Board, liste_coder):
 
 # Dessine la mission sur la Board
 
-def DrawMission(Board,liste_missions):
+def DrawMissions(Board,liste_missions):
 
     for mission in liste_missions:
         mission_pos = mission.GetPosition()
@@ -168,34 +168,46 @@ def DrawMission(Board,liste_missions):
     
     return Board
         
+
+def ReDrawMission(Board,mission ):
+  #if Board[mission_pos[0]][mission_pos[1]] == "  ":
+      
+  pass
 # Affiche les infos des joueurs
 
 def AfficherInfosJoueur(liste_coder):
-    for i, coder in enumerate(liste_coder,1): # Affiche les infos des joueurs de 1 a nb_de_joueur 
-        print("Le joueur " + str(i) +" a le symbole :  "+ coder.GetSymbol()+", a pour position"+ str(coder.GetPosition())+",a comme coding level :  "+
-        str(coder.GetCodingLevel())+", à comme energie :  "+ str(coder.GetEnergy()) +" et possède : " 
-        + str(coder.GetMoneyAmount())+ " ฿ ")
+    
+    for i, coder in enumerate(liste_coder, 1):
+        print("Joueur", i, ":")
+        print("  - Symbole:", str(coder.GetSymbol()))
+        print("  - Position:", str(coder.GetPosition()))
+        print("  - Niveau de codage:", str(coder.GetCodingLevel()))
+        print("  - Energie:", str(coder.GetEnergy()), "/ Energie maximale:", str(coder.GetEnergyMax()))
+        print("  - Argent:", str(coder.GetMoneyAmount()), " ฿")
+        print()
+
         
-        print("\n")
+    print("\n")
 
 
 # Affiche les infos des missions
 
 def AfficherInfosMissions(liste_missions):
+    for i, mission in enumerate(liste_missions, 1):
+        print(
+            f"  - Mission {i}: Symbole {mission.GetSymbol()}, "
+            f"  - Position: {mission.GetPosition()}, "
+            f"  - Travail nécessaire: {mission.GetStartingWorkLoad()}, "
+            f"  - Difficulté: {mission.GetDifficulty()}"
+        )
 
-    for i, mission in enumerate(liste_missions,1):
-        print("La mission " + str(i) +" à le symbole "+ mission.GetSymbol() +" à pour position : "
-        + str(mission.GetPosition())+" nécessite de travailler : "+ str(mission.GetStartingWorkLoad())
-        +" a un niveau de difficulté de :  "+ str(mission.GetDifficulty()))
-
-        print("\n")
 
 
 def IsCoderOnaMission(coder, list_missions):
     coder_position = coder.GetPosition()
     for mission in list_missions:
         mission_position = mission.GetPosition()
-        if (coder_position[0], coder_position[1] + 1) == mission_position:
+        if coder_position == mission_position:
             return True
     return False
 
@@ -203,38 +215,60 @@ def IsCoderOnaMission(coder, list_missions):
 
 
 
+
 """ Lorsqu'un coder, à la fin de son tour, dispose de 5000฿, alors le match se termine"""
-def GameIsOver(self):
-    if Coder.GetMoneyAmount(self)==5000:
+def GameIsOver(coder):
+    if coder.GetMoneyAmount(coder)==5000:
        print("Game Over")
        return True
     else:
        return False
 
 
+
+def FindMissionAssociatedToCoder(liste_missions,coder):
+    for mission in liste_missions:
+        if coder.GetPosition() == mission.GetPosition():
+            return mission
+    print("pas de msision la ")
+
+
+
 """le coût en dollar est égal au carré du niveau désiré, fois 10\฿. Ces actions sont
 possibles seulement si le coder dispose de l'argent nécessaire."""
 
-def CoutDepense(coder,mission):
-    Coder.UpgradeMoneyAmount((Mission.GetDifficulty()**2)*10)
+def DepenseCoderArgentPourLaMission(coder,liste_missions):
+            mission = FindMissionAssociatedToCoder(liste_missions,coder)
+            return coder.UpgradeMoneyAmount(-(mission.GetDifficulty()**2)*10)
 
         
 """le coder perd un nombre de points d'energie égal à la difficulté de la mission"""
-def CoutJoueurEnMission(self):
-    Coder.UpgradeEnergy(-(Mission.GetDifficulty()))
+
+def DepenseCoderEnergyPourLaMission(coder,liste_missions):
+    mission = FindMissionAssociatedToCoder(liste_missions,coder)
+    return coder.UpgradeEnergy((mission.GetDifficulty()))
     
+
+
 """le RW de la mission diminue du CL du coder"""
-def DepenseEnergyMission():
-    Mission.UpgradeRemainingWorkLoad(Coder.GetCodingLevel())
+
+def DepenseRwMission(coder,liste_missions):
+    mission = FindMissionAssociatedToCoder(liste_missions,coder)
+    return mission.UpgradeRemainingWorkLoad(-(coder.GetCodingLevel()))
     
 
 
     
 """Si en avançant une mission le coder amène la RW à 0 (ou moins), la mission est réalisée et le coder gagne un revenu égal au produit SW x D"""
 
-def IsFinishMission(self): 
-   if Mission.GetRemainingWorkLoad() == 0:
-       Coder.UpgradeMoneyAmount(Mission.GetStartingWorkLoad()*Mission.GetDifficulty())
+def IsFinishMission(coder,liste_missions):
+   mission = FindMissionAssociatedToCoder(liste_missions,coder)
+   if mission.GetRemainingWorkLoad() == 0:
+       print("c winnn")
+       return coder.UpgradeMoneyAmount(mission.GetStartingWorkLoad()*mission.GetDifficulty())
+       
+
+
 
 
 """Si un coder se trouve sur le JC, il peut réaliser une des actions suivantes qui sont des upgrades :
@@ -242,11 +276,16 @@ augmenter de 1 son énergie max ;
 ou bien augmenter de 1 son coding level."""
 
 def CheckJobCenter(Board,coder):
-    if Board[10][10] == coder.GetPosition():
-        requete_job_center = input(("Augmentez son énergie(A) ou augmenter votre coding level de 1 (l)"))
-        if requete_job_center == 'a':
-            coder.UpgradeEnergy(1)
-        elif requete_job_center == 'l':
-            coder.UpgradeCodingLevel(1)
-    
+    x,y = coder.GetPosition()
+    if Board[10][10] == Board[x][y]:
+        return True
+    else:
+        print(Board[10][10])
+
+def MakeChoiceAtJobCenter(Board,coder):
+    requete_job_center = input((" Augmentez son énergie('a') ou augmenter votre coding level de 1 ('c') : "))
+    if requete_job_center == 'a':
+        return coder.UpgradeEnergyMax()
+    elif requete_job_center == 'c':
+        return coder.UpgradeCodingLevel()
 
