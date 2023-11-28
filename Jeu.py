@@ -1,6 +1,4 @@
 import random
-import code
-import symbol
 from Class import *
 import string
 
@@ -32,7 +30,7 @@ def InitialisationJoueur(Board,liste_coder,nb_joueur):
     liste_symbole_coder = ['P1','P2','P3','P4']
     
     for i in range(nb_joueur):
-         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),5,20,5,4000))
+         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),5,8,5,4000))
     
     return liste_coder
 
@@ -261,12 +259,27 @@ def DepenseRwMission(coder,liste_missions):
     
 """Si en avançant une mission le coder amène la RW à 0 (ou moins), la mission est réalisée et le coder gagne un revenu égal au produit SW x D"""
 
-def IsFinishMission(coder,liste_missions):
-   mission = FindMissionAssociatedToCoder(liste_missions,coder)
-   if mission.GetRemainingWorkLoad() == 0:
-       print("c winnn")
-       return coder.UpgradeMoneyAmount(mission.GetStartingWorkLoad()*mission.GetDifficulty())
-       
+def IsFinishMission(coder, liste_missions):
+    mission = FindMissionAssociatedToCoder(liste_missions, coder)
+    #if mission.GetRemainingWorkLoad() == 0:
+    
+    return True
+
+
+
+def MissionIsFinishedYouWinMoney(coder,liste_missions):
+        mission = FindMissionAssociatedToCoder(liste_missions,coder)
+        print("c winnn")
+        return coder.UpgradeMoneyAmount(mission.GetStartingWorkLoad()*mission.GetDifficulty())
+
+
+
+def EnoughEnergy(coder):
+    if coder.GetEnergy() > 0:
+        print("Tu peux faire la mission !")
+        return True
+    else:
+        print("Pas assez d'énergie pour faire la mission retournez au job center !")
 
 
 
@@ -283,9 +296,11 @@ def CheckJobCenter(Board,coder):
         print(Board[10][10])
 
 def MakeChoiceAtJobCenter(Board,coder):
-    requete_job_center = input((" Augmentez son énergie('a') ou augmenter votre coding level de 1 ('c') : "))
+    requete_job_center = input((" Augmentez son énergie max('a') ou augmenter votre coding level de 1 ('c') ou ne rien faire (r)"))
     if requete_job_center == 'a':
         return coder.UpgradeEnergyMax()
     elif requete_job_center == 'c':
         return coder.UpgradeCodingLevel()
+    elif requete_job_center == 'r':
+        return coder.UpgradeEnergy(-5)
 

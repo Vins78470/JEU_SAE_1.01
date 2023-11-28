@@ -35,7 +35,9 @@ class Coder():
 
 
 
-     
+    def ResetEnergy(self):
+        self.energy = self.energy
+        
     def ChangePosition(self,new_position):
        self.position = new_position
 
@@ -52,19 +54,20 @@ class Coder():
          if self.energy < 0:
              self.energy = 0
              
-         if self.energy <= self.energy_max and self.energy - energy_amount <0:
+         if self.energy <= self.energy_max and self.energy - energy_amount >= 0:
              self.energy -=energy_amount
          else:
              self.energy = 0
     
     def UpgradeMoneyAmount(self, money_amount):
-
+     print("oui")
      if self.richesse < 5000 and (self.richesse - money_amount) >= 0:
+            print("Jackpot")
             self.richesse += money_amount
-            return True  # Indique que la mise à jour a été effectuée avec succès
+           
      else:
         print("Vous ne possédez pas assez d'argent. Votre solde doit être supérieur à " + str(money_amount) + " ฿")
-        return False  # Indique que la mise à jour n'a pas été effectuée
+        
 
 class Mission():
     
@@ -100,8 +103,11 @@ class Mission():
         self.remaining_workload += amount
     
     def UpgradeRemainingWorkLoad(self,amount):
-        self.starting_workload += amount
-
+        if self.remaining_workload - amount >=0:
+            self.starting_workload += amount
+        else:
+            print("oe")
+    
     def ResetRemainingWorkLoad(self):
         self.remaining_workload = 0
 

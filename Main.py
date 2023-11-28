@@ -1,6 +1,6 @@
 from Jeu import *
 from Class import * 
-# coding: utf-8
+
 
 
 def main():
@@ -35,7 +35,7 @@ def main():
         PrintBoard(Board) # Affiche la Board 
     
 
-        # Boucle pour que chaque joueur joue à tour de rôle
+       
 
         for tour in range(1,500):  # Par exemple, 5 tours de 
             for coder in liste_coder:
@@ -50,13 +50,19 @@ def main():
                         MakeChoiceAtJobCenter(Board,coder)
                         
                 if IsCoderOnaMission(coder,liste_missions):
-                            
-                            print("t'es sur une mission")
-                            
+                    print("t'es sur une mission")
+
+                    if EnoughEnergy(coder):
                             DepenseCoderArgentPourLaMission(coder,liste_missions)
                             DepenseCoderEnergyPourLaMission(coder,liste_missions)
                             DepenseRwMission(coder,liste_missions)
-                            IsFinishMission(coder,liste_missions)
+
+                    if IsFinishMission(coder,liste_missions):
+                            print("rentrÃ©eee")
+                            MissionIsFinishedYouWinMoney(coder,liste_missions)
+                            
+                            
+                          
                             
                             
 
