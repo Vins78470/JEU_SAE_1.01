@@ -30,7 +30,7 @@ def InitialisationJoueur(Board,liste_coder,nb_joueur):
     liste_symbole_coder = ['P1','P2','P3','P4']
     
     for i in range(nb_joueur):
-         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),5,8,5,4000))
+         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,1,1,45))
     
     return liste_coder
 
@@ -72,7 +72,7 @@ def InitialisationMission(liste_missions,liste_symbole_missions):
          random_i = random.randint(1,20)
          random_j = random.randint(1,20)
 
-         liste_missions.append(Mission(liste_symbole_missions[i],5,10,8,(random_i,random_j)))
+         liste_missions.append(Mission(liste_symbole_missions[i],10,10,2,(random_i,random_j)))
     
     return liste_missions
 
@@ -195,8 +195,9 @@ def AfficherInfosMissions(liste_missions):
         print(
             f"  - Mission {i}: Symbole {mission.GetSymbol()}, "
             f"  - Position: {mission.GetPosition()}, "
-            f"  - Travail nécessaire: {mission.GetStartingWorkLoad()}, "
-            f"  - Difficulté: {mission.GetDifficulty()}"
+            f"  - Travail de base a faire :  {mission.GetStartingWorkLoad()}"
+            f"  - Travail nécessaire: {mission.GetRemainingWorkLoad()}, "
+            f"  - Difficulté: {mission.GetDifficulty()}, "
         )
 
 
@@ -235,9 +236,19 @@ def FindMissionAssociatedToCoder(liste_missions,coder):
 """le coût en dollar est égal au carré du niveau désiré, fois 10\฿. Ces actions sont
 possibles seulement si le coder dispose de l'argent nécessaire."""
 
-def DepenseCoderArgentPourLaMission(coder,liste_missions):
-            mission = FindMissionAssociatedToCoder(liste_missions,coder)
-            return coder.UpgradeMoneyAmount(-(mission.GetDifficulty()**2)*10)
+def CoutDepenseArgentAuJobCenterPourEnergyMax(coder):
+    if (coder.GetMoneyAmount() - ((coder.GetEnergyMax()+1)**2)*10) >= 0:
+        return coder.UpgradeMoneyAmount(-((coder.GetEnergyMax()+1)**2)*10)
+    else:
+        print("Vous n'avez pas assez d'argent pour augmenter votre energy max ")        
+
+
+
+def CoutDepenseArgentAujobCenterPourCodingLevel(coder):
+    if (coder.GetMoneyAmount() - ((coder.GetCodingLevel()+1)**2)*10) >= 0:
+        return coder.UpgradeMoneyAmount(-((coder.GetCodingLevel()+1)**2)*10)
+    else:
+         print("Vous n'avez pas assez d'argent pour augmenter votre coding level")  
 
         
 """le coder perd un nombre de points d'energie égal à la difficulté de la mission"""
@@ -261,9 +272,8 @@ def DepenseRwMission(coder,liste_missions):
 
 def IsFinishMission(coder, liste_missions):
     mission = FindMissionAssociatedToCoder(liste_missions, coder)
-    #if mission.GetRemainingWorkLoad() == 0:
-    
-    return True
+    if mission.GetRemainingWorkLoad() == 0:
+        return True
 
 
 
@@ -295,12 +305,15 @@ def CheckJobCenter(Board,coder):
     else:
         print(Board[10][10])
 
-def MakeChoiceAtJobCenter(Board,coder):
+
+def MakeChoiceAtJobCenter(coder,liste_missions):
     requete_job_center = input((" Augmentez son énergie max('a') ou augmenter votre coding level de 1 ('c') ou ne rien faire (r)"))
     if requete_job_center == 'a':
+        CoutDepenseArgentAuJobCenterPourEnergyMax(coder)
         return coder.UpgradeEnergyMax()
     elif requete_job_center == 'c':
+        CoutDepenseArgentAujobCenterPourCodingLevel(coder)
         return coder.UpgradeCodingLevel()
     elif requete_job_center == 'r':
-        return coder.UpgradeEnergy(-5)
+        return coder.UpgradeEnergy(coder.GetEnergyMax())
 

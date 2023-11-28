@@ -36,8 +36,7 @@ class Coder():
 
 
     def ResetEnergy(self):
-        self.energy = self.energy
-        
+        self.energy = self.energy_max
     def ChangePosition(self,new_position):
        self.position = new_position
 
@@ -45,16 +44,21 @@ class Coder():
     def UpgradeCodingLevel(self):
         if self.coding_level < 10:
            self.coding_level +=1
-           
+        else:
+            print("Vous êtes deja au niveau max")
+
     def UpgradeEnergyMax(self):
          if self.energy_max < 10:
            self.energy_max += 1
+         else:
+            print("Vous avez deja l'energie max")
+              
     
     def UpgradeEnergy(self,energy_amount):
          if self.energy < 0:
              self.energy = 0
              
-         if self.energy <= self.energy_max and self.energy - energy_amount >= 0:
+         if self.energy - energy_amount <= self.energy_max and self.energy - energy_amount >= 0:
              self.energy -=energy_amount
          else:
              self.energy = 0
@@ -104,7 +108,7 @@ class Mission():
     
     def UpgradeRemainingWorkLoad(self,amount):
         if self.remaining_workload - amount >=0:
-            self.starting_workload += amount
+            self.remaining_workload += amount
         else:
             print("oe")
     

@@ -1,5 +1,7 @@
 from Jeu import *
 from Class import * 
+import os
+
 
 
 
@@ -47,13 +49,12 @@ def main():
                 if CheckJobCenter(Board,coder) and tour >= 2:
                         print("Vous etes bien sur le JOB CENTER")
                         print("\n")
-                        MakeChoiceAtJobCenter(Board,coder)
+                        MakeChoiceAtJobCenter(coder,liste_missions)
                         
                 if IsCoderOnaMission(coder,liste_missions):
                     print("t'es sur une mission")
 
                     if EnoughEnergy(coder):
-                            DepenseCoderArgentPourLaMission(coder,liste_missions)
                             DepenseCoderEnergyPourLaMission(coder,liste_missions)
                             DepenseRwMission(coder,liste_missions)
 
@@ -70,6 +71,8 @@ def main():
                 
                 potential_position = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
                 print("\n")
+                # Clearing the Screen
+                os.system('cls')
                 
                 
                 if CheckDirectionInput(potential_position,coup_possible_coder):
