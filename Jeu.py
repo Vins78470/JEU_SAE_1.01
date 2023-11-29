@@ -72,7 +72,7 @@ def InitialisationMission(liste_missions,liste_symbole_missions):
          random_i = random.randint(1,20)
          random_j = random.randint(1,20)
 
-         liste_missions.append(Mission(liste_symbole_missions[i],1,1,2,(random_i,random_j)))
+         liste_missions.append(Mission(liste_symbole_missions[i],2,2,2,(random_i,random_j)))
     
     return liste_missions
 
@@ -166,11 +166,13 @@ def DrawMissions(Board,liste_missions):
     
     return Board
         
+#Quand le joueur passe sur une mission, si elle n'est pas fini on la redessine 
 
-def ReDrawMission(Board,mission ):
-  #if Board[mission_pos[0]][mission_pos[1]] == "  ":
-      
-  pass
+def ReDrawMission(Board,liste_missions,coder):
+    mission = FindMissionAssociatedToCoder(liste_missions,coder)
+    x,y = mission.GetPosition()
+    Board[x][y] = mission.GetSymbol()
+
 # Affiche les infos des joueurs
 
 def AfficherInfosJoueur(liste_coder):

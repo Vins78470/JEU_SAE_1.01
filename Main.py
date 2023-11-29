@@ -1,7 +1,7 @@
 from Jeu import *
 from Class import * 
 import os
-
+import json
 
 
 
@@ -62,12 +62,10 @@ def main():
                             print("rentréeee")
                             MissionIsFinishedYouWinMoney(coder,liste_missions)
                             DeleteAffichageMission(liste_missions,coder)
-                            
-                            
-                            
-                          
-                            
-                            
+                    else:
+                       ReDrawMission(Board,liste_missions,coder)
+
+     
 
                 print(f"Tour {tour}, Joueur {coder.GetSymbol()}")
                 
