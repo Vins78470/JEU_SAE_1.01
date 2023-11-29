@@ -30,7 +30,7 @@ def InitialisationJoueur(Board,liste_coder,nb_joueur):
     liste_symbole_coder = ['P1','P2','P3','P4']
     
     for i in range(nb_joueur):
-         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,1,1,45))
+         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,1,1,0))
     
     return liste_coder
 
@@ -72,7 +72,7 @@ def InitialisationMission(liste_missions,liste_symbole_missions):
          random_i = random.randint(1,20)
          random_j = random.randint(1,20)
 
-         liste_missions.append(Mission(liste_symbole_missions[i],10,10,2,(random_i,random_j)))
+         liste_missions.append(Mission(liste_symbole_missions[i],1,1,2,(random_i,random_j)))
     
     return liste_missions
 
@@ -188,6 +188,13 @@ def AfficherInfosJoueur(liste_coder):
     print("\n")
 
 
+
+def DeleteAffichageMission(liste_missions,coder):
+    mission = FindMissionAssociatedToCoder(liste_missions,coder)
+    liste_missions.remove(mission)
+
+
+
 # Affiche les infos des missions
 
 def AfficherInfosMissions(liste_missions):
@@ -255,7 +262,7 @@ def CoutDepenseArgentAujobCenterPourCodingLevel(coder):
 
 def DepenseCoderEnergyPourLaMission(coder,liste_missions):
     mission = FindMissionAssociatedToCoder(liste_missions,coder)
-    return coder.UpgradeEnergy((mission.GetDifficulty()))
+    return coder.UpgradeEnergy(-(mission.GetDifficulty()))
     
 
 

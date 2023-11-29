@@ -61,6 +61,8 @@ def main():
                     if IsFinishMission(coder,liste_missions):
                             print("rentréeee")
                             MissionIsFinishedYouWinMoney(coder,liste_missions)
+                            DeleteAffichageMission(liste_missions,coder)
+                            
                             
                             
                           
