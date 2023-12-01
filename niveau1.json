@@ -1,6 +1,6 @@
 import json
 
-#Générateur de missions pour le niveau 1 (facile)
+#Gï¿½nï¿½rateur de missions pour le niveau 1 (facile)
 missions_niveau_1 = [
     {
         "symbole": "A",

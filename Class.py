@@ -30,7 +30,7 @@ class Coder():
         return self.richesse
 
 
-
+    
 
 
     def ResetEnergy(self):

@@ -190,38 +190,22 @@ def AfficherInfosJoueur(liste_coder):
     print("\n")
 
 
-def CheckReapparitionMission(tour): 
-   return tour %  5== 0
+def CheckReapparitionMission(compt,mission_supprimé_a_check):
+
+   return compt == mission_supprimé_a_check.GetDifficulty()*5
 
 
 def DeleteMission(liste_missions, coder):
     mission = FindMissionAssociatedToCoder(liste_missions, coder)
+    tmp_mission = mission
     liste_missions.remove(mission)
+    return tmp_mission
 
-# Supposons que vous ayez une fonction pour ajouter une mission dans la liste
-def AddMission(liste_missions, mission):
-    liste_missions.append(mission)
-    
 
 # Cette partie du code s'exécuterait à chaque tour
-def UpdateMissions(coder,liste_missions, tour):
+def UpdateMissions(liste_missions,mission_supprimé_a_check):
     
-    missions_to_reappear = []
-   
-    
-    for mission in liste_missions:
-        if IsFinishMission(coder, liste_missions):
-            missions_to_reappear.append(mission)
-            mission.ResetValues()  # Réinitialise les valeurs de la mission ici pour la réapparition
-        
-    # Supprimer les missions terminées de la liste
-    for mission in missions_to_reappear:
-        liste_missions.remove(mission)
-            
-    if CheckReapparitionMission(tour):
-        # Réinsérer les missions réinitialisées dans la liste pour leur réapparition
-        for mission in missions_to_reappear:
-            liste_missions.append(mission)
+    return liste_missions.append(mission_supprimé_a_check)
 
 # Affiche les infos des missions
 

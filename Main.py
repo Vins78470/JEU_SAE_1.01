@@ -4,9 +4,30 @@ import os
 import json
 
 
+class Game
+    Game(); // nb_joueur = 0
+    GetUserInput(); // nb_joueur = 3
+    Initialize(); // 
+    Start();
+    Play();
+    PlayOneRound();
+    Draw();
+    Stop();
+
 
 def main():
 
+    Game g = new Game();
+    g.GetUserInput();
+    if (g.CanStart())
+    {
+        for..
+        g.PlayOneRound();
+        g.Draw();
+    }
+     
+    mission_supprime_a_check = 0
+    compt = 0
     coup_possible_coder = {'h': (-1, 0), 'b': (1, 0), 'g': (0, -1), 'd': (0, 1)}
     liste_symbole_missions = []
     liste_missions = []
@@ -22,7 +43,7 @@ def main():
 
     print("Bienvenue sur ESN Wars.")
     print("\n")
-    nb_joueur = int(input(("A combien de joueur voulez vous jouer ? ")))
+    nb_joueur = int(input(("A combien de joueur(s) voulez vous jouer ? ")))
 
     if CheckNombreJoueur(nb_joueur):
         print("\n")
@@ -56,12 +77,18 @@ def main():
                             DepenseCoderEnergyPourLaMission(coder,liste_missions)
                             DepenseRwMission(coder,liste_missions)
 
-                    if IsFinishMission(coder,liste_missions):
+                    if IsFinishMission(coder,liste_missions): 
                             MissionIsFinishedYouWinMoney(coder,liste_missions)
-                            #DeleteMission(liste_missions, coder)
-                            UpdateMissions(coder,liste_missions, tour)
+                            mission_supprime_a_check = DeleteMission(liste_missions, coder)
+                    
+                    if mission_supprime_a_check != 0:
+                            if CheckReapparitionMission(compt,mission_supprime_a_check):
+                                print("c congru")
+                                UpdateMissions(liste_missions,mission_supprime_a_check)
+                    
                     else:
                        ReDrawMission(Board,liste_missions,coder)
+                       compt+=1
 
 
      
