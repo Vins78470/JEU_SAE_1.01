@@ -1,7 +1,5 @@
 ﻿import time
 
-
-
 class Coder():
     
     def __init__(self,s,p,cl, em, e, r):
@@ -37,6 +35,7 @@ class Coder():
 
     def ResetEnergy(self):
         self.energy = self.energy_max
+        
     def ChangePosition(self,new_position):
        self.position = new_position
 
@@ -84,6 +83,16 @@ class Mission():
         self.remaining_workload = rw
         self.difficulty = d             
         self.position = p
+        
+
+    # Valeurs initiales pour que quand la mission réapparaisse elle reprenne ses attributs
+        self.symbole_initial = s
+        self.starting_workload_initial = sw
+        self.remaining_workload_initial = rw
+        self.difficulty_initial = d
+        self.position_initial = p
+        
+
 
     def GetSymbol(self):
         return self.symbole
@@ -103,9 +112,13 @@ class Mission():
 
 
 
-    def ChangeMission():
-        pass
-    
+    def ResetValues(self):
+        self.symbole = self.symbole_initial
+        self.starting_workload = self.starting_workload_initial
+        self.remaining_workload = self.remaining_workload_initial
+        self.difficulty = self.difficulty_initial
+        self.position = self.position_initial
+       
     def UpgradeRemaningWorkLoad(self,amount):
         self.remaining_workload += amount
     

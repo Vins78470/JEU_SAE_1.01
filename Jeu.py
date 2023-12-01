@@ -166,7 +166,7 @@ def DrawMissions(Board,liste_missions):
     
     return Board
         
-#Quand le joueur passe sur une mission, si elle n'est pas fini on la redessine 
+# Quand le joueur passe sur une mission, si elle n'est pas fini on la redessine 
 
 def ReDrawMission(Board,liste_missions,coder):
     mission = FindMissionAssociatedToCoder(liste_missions,coder)
@@ -190,12 +190,38 @@ def AfficherInfosJoueur(liste_coder):
     print("\n")
 
 
+def CheckReapparitionMission(tour): 
+   return tour %  5== 0
 
-def DeleteAffichageMission(liste_missions,coder):
-    mission = FindMissionAssociatedToCoder(liste_missions,coder)
+
+def DeleteMission(liste_missions, coder):
+    mission = FindMissionAssociatedToCoder(liste_missions, coder)
     liste_missions.remove(mission)
 
+# Supposons que vous ayez une fonction pour ajouter une mission dans la liste
+def AddMission(liste_missions, mission):
+    liste_missions.append(mission)
+    
 
+# Cette partie du code s'exécuterait à chaque tour
+def UpdateMissions(coder,liste_missions, tour):
+    
+    missions_to_reappear = []
+   
+    
+    for mission in liste_missions:
+        if IsFinishMission(coder, liste_missions):
+            missions_to_reappear.append(mission)
+            mission.ResetValues()  # Réinitialise les valeurs de la mission ici pour la réapparition
+        
+    # Supprimer les missions terminées de la liste
+    for mission in missions_to_reappear:
+        liste_missions.remove(mission)
+            
+    if CheckReapparitionMission(tour):
+        # Réinsérer les missions réinitialisées dans la liste pour leur réapparition
+        for mission in missions_to_reappear:
+            liste_missions.append(mission)
 
 # Affiche les infos des missions
 
@@ -218,8 +244,6 @@ def IsCoderOnaMission(coder, list_missions):
         if coder_position == mission_position:
             return True
     return False
-
-
 
 
 
@@ -247,9 +271,11 @@ possibles seulement si le coder dispose de l'argent nécessaire."""
 
 def CoutDepenseArgentAuJobCenterPourEnergyMax(coder):
     if (coder.GetMoneyAmount() - ((coder.GetEnergyMax()+1)**2)*10) >= 0:
-        return coder.UpgradeMoneyAmount(-((coder.GetEnergyMax()+1)**2)*10)
+        coder.UpgradeMoneyAmount(-((coder.GetEnergyMax()+1)**2)*10)
+        return True
     else:
-        print("Vous n'avez pas assez d'argent pour augmenter votre energy max ")        
+        print("Vous n'avez pas assez d'argent pour augmenter votre energy max ") 
+        return False
 
 
 
@@ -316,13 +342,13 @@ def CheckJobCenter(Board,coder):
 
 
 def MakeChoiceAtJobCenter(coder,liste_missions):
-    requete_job_center = input((" Augmentez son énergie max('a') ou augmenter votre coding level de 1 ('c') ou ne rien faire (r)"))
+    requete_job_center = input((" Augmentez son énergie max('a') ou augmenter votre coding level de 1 ('c') : "))
     if requete_job_center == 'a':
-        CoutDepenseArgentAuJobCenterPourEnergyMax(coder)
-        return coder.UpgradeEnergyMax()
+        if CoutDepenseArgentAuJobCenterPourEnergyMax(coder):
+            return coder.UpgradeEnergyMax()
     elif requete_job_center == 'c':
         CoutDepenseArgentAujobCenterPourCodingLevel(coder)
         return coder.UpgradeCodingLevel()
-    elif requete_job_center == 'r':
-        return coder.UpgradeEnergy(coder.GetEnergyMax())
+    coder.ResetEnergy()
+
 

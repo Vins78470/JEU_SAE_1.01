@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\PIL"
   ],
-  "SelectedNode": "\\niveau1.json",
+  "SelectedNode": "\\Class.py",
   "PreviewInSolutionExplorer": false
 }

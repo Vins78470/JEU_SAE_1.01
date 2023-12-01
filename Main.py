@@ -6,7 +6,7 @@ import json
 
 
 def main():
-    
+
     coup_possible_coder = {'h': (-1, 0), 'b': (1, 0), 'g': (0, -1), 'd': (0, 1)}
     liste_symbole_missions = []
     liste_missions = []
@@ -37,9 +37,7 @@ def main():
         PrintBoard(Board) # Affiche la Board 
     
 
-       
-
-        for tour in range(1,500):  # Par exemple, 5 tours de 
+        for tour in range(1,500):  # Par exemple, 500 tours 
             for coder in liste_coder:
                 AfficherInfosMissions(liste_missions)
                 print("--------------------------------------------------------------------------------------------------------------------")
@@ -59,11 +57,12 @@ def main():
                             DepenseRwMission(coder,liste_missions)
 
                     if IsFinishMission(coder,liste_missions):
-                            print("rentréeee")
                             MissionIsFinishedYouWinMoney(coder,liste_missions)
-                            DeleteAffichageMission(liste_missions,coder)
+                            #DeleteMission(liste_missions, coder)
+                            UpdateMissions(coder,liste_missions, tour)
                     else:
                        ReDrawMission(Board,liste_missions,coder)
+
 
      
 
@@ -71,10 +70,7 @@ def main():
                 
                 potential_position = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
                 print("\n")
-                # Clearing the Screen
-                os.system('cls')
-                
-                
+                           
                 if CheckDirectionInput(potential_position,coup_possible_coder):
 
                     potential_position = CherchePosition(potential_position,coup_possible_coder)
