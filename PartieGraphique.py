@@ -1,70 +1,71 @@
 from tkinter import *
-from Jeu import DrawMissions
+from Class import *
 
 
-CELL_SIZE = 50
-NB_CELL_WIDTH = 21
-NB_CELL_HEIGHT = 21
-WIDTH = CELL_SIZE*NB_CELL_WIDTH
-HEIGHT = NB_CELL_HEIGHT * CELL_SIZE
+class GameWindow:
+    def __init__(self, cell_size=50, nb_cell_width=21, nb_cell_height=21):
+        self.CELL_SIZE = cell_size
+        self.NB_CELL_WIDTH = nb_cell_width
+        self.NB_CELL_HEIGHT = nb_cell_height
+        self.WIDTH = self.CELL_SIZE * self.NB_CELL_WIDTH
+        self.HEIGHT = self.CELL_SIZE * self.NB_CELL_HEIGHT
 
-fenetre = Tk()
-fenetre.title("ESN GAME")
+        self.fenetre = Tk()
+        self.fenetre.title("ESN GAME")
 
+        self.canvas = Canvas(self.fenetre, width=self.WIDTH, height=self.HEIGHT)
+        self.canvas.pack()
 
-canvas = Canvas(fenetre, width=WIDTH, height=HEIGHT)
-canvas.pack()
+        # Draw initial rectangles
+        for i in range(self.NB_CELL_HEIGHT):
+            for j in range(self.NB_CELL_WIDTH):
+                x1 = i * self.CELL_SIZE
+                y1 = j * self.CELL_SIZE
+                x2 = x1 + self.CELL_SIZE
+                y2 = y1 + self.CELL_SIZE
+                self.canvas.create_rectangle(x1, y1, x2, y2, outline='black', fill='white')
 
-canvas.create_rectangle(1000, 0, CELL_SIZE, CELL_SIZE, outline='black', fill='white')
+        self.joueur = self.draw_joueur_at_center(self.WIDTH / 2, self.WIDTH / 2)
 
-
-# Dessine une grille de cellules
-for i in range(NB_CELL_HEIGHT):
-    for j in range(NB_CELL_WIDTH):
-        x1 = i * CELL_SIZE
-        y1 = j * CELL_SIZE
-        x2 = x1 + CELL_SIZE
-        y2 = y1 + CELL_SIZE
-        canvas.create_rectangle(x1, y1, x2, y2, outline='black', fill='white')
-
-
-
-
-# Dessine une grille de cellules
-for i in range(NB_CELL_HEIGHT):
-    for j in range(NB_CELL_WIDTH):
-        x1 = i * CELL_SIZE
-        y1 = j * CELL_SIZE
-        x2 = x1 + CELL_SIZE
-        y2 = y1 + CELL_SIZE
-        canvas.create_rectangle(x1, y1, x2, y2, outline='black', fill='white')
-
-def DrawJoueurAtCenter(x,y):
-     return canvas.create_rectangle(WIDTH/2 - CELL_SIZE / 2, HEIGHT/2 - CELL_SIZE / 2, WIDTH/2 + CELL_SIZE / 2, HEIGHT/2 + CELL_SIZE / 2, fill="blue")  # Création d'un joueur
+        self.canvas.bind_all('<KeyPress>', self.deplacer)
+        self.fenetre.mainloop()
 
 
-joueur = DrawJoueurAtCenter(WIDTH/2,WIDTH/2)
+    def draw_joueur_at_center(self, x, y):
+        return self.canvas.create_rectangle(
+            self.WIDTH / 2 - self.CELL_SIZE / 2,
+            self.HEIGHT / 2 - self.CELL_SIZE / 2,
+            self.WIDTH / 2 + self.CELL_SIZE / 2,
+            self.HEIGHT / 2 + self.CELL_SIZE / 2,
+            fill="blue"
+        )
 
 
+    def draw_missions(self, missions):
+        for mission in missions:
+            mission_x, mission_y = mission.get_position()  # Utiliser le getter pour obtenir la position de la mission
 
-def deplacer(event):
-    touche = event.keysym
-    if touche == "Up":
-        canvas.move(joueur, 0, -CELL_SIZE)  # Déplacer vers le haut
-    elif touche == "Down":
-        canvas.move(joueur, 0, CELL_SIZE)  # Déplacer vers le bas
-    elif touche == "Left":
-        canvas.move(joueur, -CELL_SIZE, 0)  # Déplacer vers la gauche
-    elif touche == "Right":
-        canvas.move(joueur, CELL_SIZE, 0)  # Déplacer vers la droite
+            mission_x *= self.CELL_SIZE
+            mission_y *= self.CELL_SIZE
 
+            x1 = mission_x
+            y1 = mission_y
+            x2 = mission_x + self.CELL_SIZE
+            y2 = mission_y + self.CELL_SIZE
 
+            self.canvas.create_rectangle(x1, y1, x2, y2, outline='black', fill='yellow')
 
-canvas.bind_all('<KeyPress>', deplacer )  # Lier la fonction de déplacement aux touches pressées
+    def deplacer(self, event):
+        touche = event.keysym
+        if touche == "Up":
+            self.canvas.move(self.joueur, 0, -self.CELL_SIZE)  # Déplacer vers le haut
+        elif touche == "Down":
+            self.canvas.move(self.joueur, 0, self.CELL_SIZE)  # Déplacer vers le bas
+        elif touche == "Left":
+            self.canvas.move(self.joueur, -self.CELL_SIZE, 0)  # Déplacer vers la gauche
+        elif touche == "Right":
+            self.canvas.move(self.joueur, self.CELL_SIZE, 0)  # Déplacer vers la droite
 
-fenetre.mainloop()
-
-
-from tkinter import *
-
-
+# Utilisation de la classe pour démarrer le jeu
+game = GameWindow()
+game.create_menu()

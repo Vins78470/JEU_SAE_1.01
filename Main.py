@@ -1,119 +1,99 @@
 from Jeu import *
-from Class import * 
+from Class import *
+from PartieGraphique import *
 import os
 import json
 
+class Game(GameWindow):
 
-class Game
-    Game(); // nb_joueur = 0
-    GetUserInput(); // nb_joueur = 3
-    Initialize(); // 
-    Start();
-    Play();
-    PlayOneRound();
-    Draw();
-    Stop();
+    def __init__(self, cell_size=50, nb_cell_width=21, nb_cell_height=21):
+        super().__init__(cell_size, nb_cell_width, nb_cell_height)
+        self.mission_supprime_a_check = 0
+        self.compt = 0
+        self.coup_possible_coder = {'h': (-1, 0), 'b': (1, 0), 'g': (0, -1), 'd': (0, 1)}
+        self.liste_symbole_missions = []
+        self.liste_missions = []
+        self.nb_joueur = 0
+        self.liste_coder = []
+        self.Board = []
 
-
-def main():
-
-    Game g = new Game();
-    g.GetUserInput();
-    if (g.CanStart())
-    {
-        for..
-        g.PlayOneRound();
-        g.Draw();
-    }
-     
-    mission_supprime_a_check = 0
-    compt = 0
-    coup_possible_coder = {'h': (-1, 0), 'b': (1, 0), 'g': (0, -1), 'd': (0, 1)}
-    liste_symbole_missions = []
-    liste_missions = []
-    nb_joueur = 0
-    liste_coder = []
-    Board = []
-  
-    
-    
-    #while(GameIsOver(self) == False): # verifie si le joueur a les 5000 B
-        
-    Board = InitBoard(Board) #Initialise la board 21*21
-
-    print("Bienvenue sur ESN Wars.")
-    print("\n")
-    nb_joueur = int(input(("A combien de joueur(s) voulez vous jouer ? ")))
-
-    if CheckNombreJoueur(nb_joueur):
+    def initialize_game(self):
+        self.Board = InitBoard(self.Board)  # Initialise la board 21*21
+        print("Bienvenue sur ESN Wars.")
         print("\n")
+        self.nb_joueur = int(input(("A combien de joueur(s) voulez vous jouer ? ")))
 
-        liste_coder = InitialisationJoueur(Board,liste_coder,nb_joueur)
-        liste_symbole_missions = GenerateSymbolMission(liste_symbole_missions)
-        liste_missions = InitialisationMission(liste_missions,liste_symbole_missions)
+        if CheckNombreJoueur(self.nb_joueur):
+            print("\n")
 
-        Board = DrawPlayerAtJobCenter(Board, liste_coder)
-        Board = DrawMissions(Board,liste_missions)
+            self.liste_coder = InitialisationJoueur(self.Board, self.liste_coder, self.nb_joueur)
+            self.liste_symbole_missions = GenerateSymbolMission(self.liste_symbole_missions)
+            self.liste_missions = InitialisationMission(self.liste_missions, self.liste_symbole_missions)
 
-        PrintBoard(Board) # Affiche la Board 
-    
+            self.Board = DrawPlayerAtJobCenter(self.Board, self.liste_coder)
+            self.Board = DrawMissions(self.Board, self.liste_missions)
 
-        for tour in range(1,500):  # Par exemple, 500 tours 
-            for coder in liste_coder:
-                AfficherInfosMissions(liste_missions)
+            PrintBoard(self.Board)  # Affiche la Board dans la console
+            self.draw_board()  # Affiche la Board
+
+            # Convertir les objets Mission en objets Coder pour utiliser les getters
+            mission_positions = [(mission.GetPosition()) for mission in self.liste_missions]
+            self.draw_missions(mission_positions)  # Dessiner les missions
+
+            self.play_game()
+
+        else:
+            self.initialize_game()
+
+    def play_game(self):
+        for tour in range(1, 500):  # Par exemple, 500 tours
+            for coder in self.liste_coder:
+                AfficherInfosMissions(self.liste_missions)
                 print("--------------------------------------------------------------------------------------------------------------------")
                 print("\n")
-                AfficherInfosJoueur(liste_coder)
+                AfficherInfosJoueur(self.liste_coder)
                 print("--------------------------------------------------------------------------------------------------------------------")
-                if CheckJobCenter(Board,coder) and tour >= 2:
-                        print("Vous etes bien sur le JOB CENTER")
-                        print("\n")
-                        MakeChoiceAtJobCenter(coder,liste_missions)
-                        
-                if IsCoderOnaMission(coder,liste_missions):
+
+                print(f"Tour {tour}, Joueur {coder.GetSymbol()}")
+
+                potential_position = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
+                print("\n")
+
+                if CheckDirectionInput(potential_position, self.coup_possible_coder):
+
+                    potential_position = CherchePosition(potential_position, self.coup_possible_coder)
+
+                    if IsMovable(potential_position, coder, self.liste_coder):
+
+                        DeletePlayer(self.Board, coder)
+                        DrawPlayer(self.Board, potential_position, coder)
+                        UpdateJobCenter(self.Board, self.liste_coder)
+                        PrintBoard(self.Board)  # Affiche la Board
+
+                if CheckJobCenter(self.Board, coder) and tour >= 2:
+                    print("Vous etes bien sur le JOB CENTER")
+                    print("\n")
+                    MakeChoiceAtJobCenter(coder, self.liste_missions)
+
+                if IsCoderOnaMission(coder, self.liste_missions):
                     print("t'es sur une mission")
 
                     if EnoughEnergy(coder):
-                            DepenseCoderEnergyPourLaMission(coder,liste_missions)
-                            DepenseRwMission(coder,liste_missions)
+                        DepenseCoderEnergyPourLaMission(coder, self.liste_missions)
+                        DepenseRwMission(coder, self.liste_missions)
 
-                    if IsFinishMission(coder,liste_missions): 
-                            MissionIsFinishedYouWinMoney(coder,liste_missions)
-                            mission_supprime_a_check = DeleteMission(liste_missions, coder)
-                    
-                    if mission_supprime_a_check != 0:
-                            if CheckReapparitionMission(compt,mission_supprime_a_check):
-                                print("c congru")
-                                UpdateMissions(liste_missions,mission_supprime_a_check)
-                    
+                    if IsFinishMission(coder, self.liste_missions):
+                        MissionIsFinishedYouWinMoney(coder, self.liste_missions)
+                        self.mission_supprime_a_check = DeleteMission(self.liste_missions, coder)
                     else:
-                       ReDrawMission(Board,liste_missions,coder)
-                       compt+=1
+                        ReDrawMission(self.Board, self.liste_missions, coder)
+                        self.compt += 1
+
+                if self.mission_supprime_a_check != 0:
+                    if CheckReapparitionMission(self.compt, self.mission_supprime_a_check):
+                        print("c congru")
+                        UpdateMissions(self.liste_missions, self.mission_supprime_a_check)
 
 
-     
-
-                print(f"Tour {tour}, Joueur {coder.GetSymbol()}")
-                
-                potential_position = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
-                print("\n")
-                           
-                if CheckDirectionInput(potential_position,coup_possible_coder):
-
-                    potential_position = CherchePosition(potential_position,coup_possible_coder)
-                                
-                    if IsMovable(potential_position,coder,liste_coder):
-
-                        DeletePlayer(Board,coder)
-                        DrawPlayer(Board,potential_position,coder)
-                        UpdateJobCenter(Board, liste_coder)
-                        PrintBoard(Board) # Affiche la Board
-            
-                        
-    else:
-        main()
-
-
-main()
-
-
+game = Game()
+game.initialize_game()

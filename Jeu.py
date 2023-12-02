@@ -42,6 +42,7 @@ def CheckNombreJoueur(nb_joueur):
         print("Il faut choisir entre 1 et 4 joueurs")
         return False
 
+
 def CheckDirectionInput(potential_position,coup_possible_coder):
     if potential_position in coup_possible_coder:
         return True
