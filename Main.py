@@ -4,10 +4,13 @@ from PartieGraphique import *
 import os
 import json
 
-class Game(GameWindow):
+class Game():
 
     def __init__(self, cell_size=50, nb_cell_width=21, nb_cell_height=21):
-        super().__init__(cell_size, nb_cell_width, nb_cell_height)
+        # Utilisation de la classe pour démarrer le jeu
+        self.window = WindowGame()
+
+        #super().__init__(cell_size, nb_cell_width, nb_cell_height)
         self.mission_supprime_a_check = 0
         self.compt = 0
         self.coup_possible_coder = {'h': (-1, 0), 'b': (1, 0), 'g': (0, -1), 'd': (0, 1)}
@@ -17,7 +20,7 @@ class Game(GameWindow):
         self.liste_coder = []
         self.Board = []
 
-    def initialize_game(self):
+    def start_game(self):
         self.Board = InitBoard(self.Board)  # Initialise la board 21*21
         print("Bienvenue sur ESN Wars.")
         print("\n")
@@ -29,21 +32,24 @@ class Game(GameWindow):
             self.liste_coder = InitialisationJoueur(self.Board, self.liste_coder, self.nb_joueur)
             self.liste_symbole_missions = GenerateSymbolMission(self.liste_symbole_missions)
             self.liste_missions = InitialisationMission(self.liste_missions, self.liste_symbole_missions)
-
-            self.Board = DrawPlayerAtJobCenter(self.Board, self.liste_coder)
-            self.Board = DrawMissions(self.Board, self.liste_missions)
-
-            PrintBoard(self.Board)  # Affiche la Board dans la console
-            self.draw_board()  # Affiche la Board
-
+            
             # Convertir les objets Mission en objets Coder pour utiliser les getters
             mission_positions = [(mission.GetPosition()) for mission in self.liste_missions]
-            self.draw_missions(mission_positions)  # Dessiner les missions
 
+            self.Board = DrawPlayerAtJobCenter(self.Board, self.liste_coder)
+            PrintBoard(self.Board)  # Affiche la Board dans la console
+            self.Board = DrawMissions(self.Board, self.liste_missions)
+
+            self.window.draw_joueur_at_center(self.window)  # Dessiner le joueur au centre
+            self.window.draw_board()  # Affiche la Board
+            self.window.draw_missions(self.window, mission_positions)  # Dessiner les missions
+
+            self.window.create_menu()
             self.play_game()
 
         else:
             self.initialize_game()
+
 
     def play_game(self):
         for tour in range(1, 500):  # Par exemple, 500 tours
@@ -96,4 +102,4 @@ class Game(GameWindow):
 
 
 game = Game()
-game.initialize_game()
+game.start_game()

@@ -2,7 +2,7 @@ from tkinter import *
 from Class import *
 
 
-class GameWindow:
+class WindowGame:
     def __init__(self, cell_size=50, nb_cell_width=21, nb_cell_height=21):
         self.CELL_SIZE = cell_size
         self.NB_CELL_WIDTH = nb_cell_width
@@ -16,7 +16,24 @@ class GameWindow:
         self.canvas = Canvas(self.fenetre, width=self.WIDTH, height=self.HEIGHT)
         self.canvas.pack()
 
-        # Draw initial rectangles
+        self.canvas.bind_all('<KeyPress>', self.deplacer_joueur)
+        self.fenetre.mainloop()
+
+
+
+    def draw_joueur_at_center(self):
+        x = self.WIDTH / 2
+        y = self.WIDTH / 2
+        self.joueur = self.canvas.create_rectangle(
+            self.WIDTH / 2 - self.CELL_SIZE / 2,
+            self.HEIGHT / 2 - self.CELL_SIZE / 2,
+            self.WIDTH / 2 + self.CELL_SIZE / 2,
+            self.HEIGHT / 2 + self.CELL_SIZE / 2,
+            fill="blue"
+        )
+
+    # Draw initial rectangles
+    def draw_board(self):
         for i in range(self.NB_CELL_HEIGHT):
             for j in range(self.NB_CELL_WIDTH):
                 x1 = i * self.CELL_SIZE
@@ -24,21 +41,6 @@ class GameWindow:
                 x2 = x1 + self.CELL_SIZE
                 y2 = y1 + self.CELL_SIZE
                 self.canvas.create_rectangle(x1, y1, x2, y2, outline='black', fill='white')
-
-        self.joueur = self.draw_joueur_at_center(self.WIDTH / 2, self.WIDTH / 2)
-
-        self.canvas.bind_all('<KeyPress>', self.deplacer)
-        self.fenetre.mainloop()
-
-
-    def draw_joueur_at_center(self, x, y):
-        return self.canvas.create_rectangle(
-            self.WIDTH / 2 - self.CELL_SIZE / 2,
-            self.HEIGHT / 2 - self.CELL_SIZE / 2,
-            self.WIDTH / 2 + self.CELL_SIZE / 2,
-            self.HEIGHT / 2 + self.CELL_SIZE / 2,
-            fill="blue"
-        )
 
 
     def draw_missions(self, missions):
@@ -55,7 +57,7 @@ class GameWindow:
 
             self.canvas.create_rectangle(x1, y1, x2, y2, outline='black', fill='yellow')
 
-    def deplacer(self, event):
+    def deplacer_joueur(self, event):
         touche = event.keysym
         if touche == "Up":
             self.canvas.move(self.joueur, 0, -self.CELL_SIZE)  # Déplacer vers le haut
@@ -66,6 +68,3 @@ class GameWindow:
         elif touche == "Right":
             self.canvas.move(self.joueur, self.CELL_SIZE, 0)  # Déplacer vers la droite
 
-# Utilisation de la classe pour démarrer le jeu
-game = GameWindow()
-game.create_menu()
