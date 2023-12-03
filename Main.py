@@ -6,10 +6,11 @@ import json
 
 class Game():
 
-    def __init__(self, cell_size=50, nb_cell_width=21, nb_cell_height=21):
-        # Utilisation de la classe pour démarrer le jeu
-        self.window = WindowGame()
+    def __init__(self):
 
+        # Utilisation de la classe pour démarrer le jeu
+
+        self.window = WindowGame(cell_size=50, nb_cell_width=21, nb_cell_height=21)
         #super().__init__(cell_size, nb_cell_width, nb_cell_height)
         self.mission_supprime_a_check = 0
         self.compt = 0
@@ -19,6 +20,9 @@ class Game():
         self.nb_joueur = 0
         self.liste_coder = []
         self.Board = []
+
+        self.start_game()
+        
 
     def start_game(self):
         self.Board = InitBoard(self.Board)  # Initialise la board 21*21
@@ -33,20 +37,16 @@ class Game():
             self.liste_symbole_missions = GenerateSymbolMission(self.liste_symbole_missions)
             self.liste_missions = InitialisationMission(self.liste_missions, self.liste_symbole_missions)
             
-            # Convertir les objets Mission en objets Coder pour utiliser les getters
-            mission_positions = [(mission.GetPosition()) for mission in self.liste_missions]
 
             self.Board = DrawPlayerAtJobCenter(self.Board, self.liste_coder)
             PrintBoard(self.Board)  # Affiche la Board dans la console
             self.Board = DrawMissions(self.Board, self.liste_missions)
-
-            self.window.draw_joueur_at_center(self.window)  # Dessiner le joueur au centre
-            self.window.draw_board()  # Affiche la Board
-            self.window.draw_missions(self.window, mission_positions)  # Dessiner les missions
-
-            self.window.create_menu()
-            self.play_game()
-
+            
+            #self.play_game()
+            #self.window.draw_board()  # Affiche la Board
+            #self.window.draw_joueur_at_center()  # Dessiner le joueur au centre
+            
+    
         else:
             self.initialize_game()
 
@@ -102,4 +102,5 @@ class Game():
 
 
 game = Game()
-game.start_game()
+
+
