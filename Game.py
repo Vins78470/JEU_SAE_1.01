@@ -1,6 +1,5 @@
 from Rules import *
 from Class import *
-
 import json
 # -*- coding: utf-8 -*-
 
@@ -8,9 +7,7 @@ class Game():
 
     def __init__(self):
 
-        # Utilisation de la classe pour démarrer le jeu
-
-          #super().__init__(cell_size, nb_cell_width, nb_cell_height)
+    
         self.mission_supprime_a_check = 0
         self.compt = 0
         self.letter2MoveDictionnary = {'h': (-1, 0), 'b': (1, 0), 'g': (0, -1), 'd': (0, 1)}
@@ -19,9 +16,11 @@ class Game():
         self.nb_coder = 0
         self.liste_coder = []
         self.Board = []
+        
 
 
     def start(self, nb_coder):
+
         self.Board = InitBoard(self.Board)  # Initialise la board 21*21
         print("Bienvenue sur ESN Wars.")
         print("\n")
@@ -36,11 +35,12 @@ class Game():
             
 
             self.Board = DrawPlayerAtJobCenter(self.Board, self.liste_coder)
-            PrintBoard(self.Board)  # Affiche la Board dans la console
             self.Board = DrawMissions(self.Board, self.liste_missions)
-    
+            PrintBoard(self.Board)  # Affiche la Board dans la console après les initialisations
+            
         else:
-            self.start()
+            print("Choisissez entre 1 et 4 joueurs")
+            self.start(nb_coder)
 
     def play(self):
         for round in range(1, 500):  # Par exemple, 500 tours
@@ -56,11 +56,16 @@ class Game():
                 moveLetter = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
                 print("\n")
                 moveDirection = CherchePosition(moveLetter, self.letter2MoveDictionnary)
+                
                 if CheckDirectionInput(moveLetter, self.letter2MoveDictionnary):
-                    self.playRound(coder, moveDirection)
-                    self.checkCoderEnergy(coder, round)
+                    self.playRound(coder, moveDirection, round)
+                    
 
-    def playRound(self, coder, moveDirection):
+                else:
+                    print("choisir une touche valide")
+             
+
+    def playRound(self, coder, moveDirection,round):
 
             if IsMovable(moveDirection, coder, self.liste_coder):
 
@@ -84,13 +89,16 @@ class Game():
                     self.compt += 1
 
             if self.mission_supprime_a_check != 0:
-                if CheckReapparitionMission(self.compt, self.mission_supprime_a_check):
-                    print("c congru")
+                if CheckReapparitionMission(self.compt, self.mission_supprime_a_check): 
                     UpdateMissions(self.liste_missions, self.mission_supprime_a_check)
-                    
-    def checkCoderEnergy(self, coder, round):
+            
+            if CheckJobCenter(self.Board,coder) :
+                self.checkCoderEnergy(coder,round)
 
+
+    def checkCoderEnergy(self, coder, round):
         if CheckJobCenter(self.Board, coder) and round >= 2:
             print("Vous etes bien sur le JOB CENTER")
             print("\n")
-        MakeChoiceAtJobCenter(coder, AskChoiceAtJobCenter(coder))
+
+        MakeChoiceAtJobCenter(coder, AskChoiceAtJobCenter())

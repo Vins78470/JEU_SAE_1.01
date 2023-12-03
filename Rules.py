@@ -30,7 +30,7 @@ def InitialisationCoder(Board,liste_coder,nb_coder):
     liste_symbole_coder = ['P1','P2','P3','P4']
     
     for i in range(nb_coder):
-         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,1,1,100,"blue"))
+         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,1,1,0,"blue"))
     
     return liste_coder
 
@@ -323,15 +323,18 @@ augmenter de 1 son énergie max ;
 ou bien augmenter de 1 son coding level."""
 
 def CheckJobCenter(Board,coder):
+    print("ca rentre la")
     x,y = coder.GetPosition()
     if Board[10][10] == Board[x][y]:
+        print('est vrai')
         return True
     else:
-        print(Board[10][10])
+        print('est faux')
+        return False
 
 
-def AskChoiceAtJobCenter(coder):
-    decisionLetter = input((" Augmentez son énergie max('a') ou augmenter votre coding level de 1 ('c') : "))
+def AskChoiceAtJobCenter():
+    decisionLetter = input(" Augmentez son énergie max('a') ou augmenter votre coding level de 1 ('c') : ")
     return decisionLetter
 
 def MakeChoiceAtJobCenter(coder, decisionLetter):

@@ -78,12 +78,12 @@ class Coder():
              self.energy = 0
     
     def UpgradeMoneyAmount(self, money_amount):
-     print("oui")
+   
      if self.richesse < 5000 and money_amount <=0 and (self.richesse - money_amount) >= 0: #Le coder perd de l'argent et on verifie si son argent sera tjrs >=0
-            print("Jackpot1")
+          
             self.richesse -= money_amount
      elif self.richesse < 5000 and money_amount >= 0 : #Le coder gagne de l'argent   
-            print("Jackpot2")
+           
             self.richesse += money_amount
            
      else:
