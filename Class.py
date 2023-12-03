@@ -1,15 +1,30 @@
-﻿import time
+﻿from asyncio.windows_events import NULL
+import time
 
 class Coder():
     
-    def __init__(self,s,p,cl, em, e, r):
+    def __init__(self,s,p,cl, em, e, r, color):
         self.symbole = s
         self.position = p
         self.coding_level = cl
         self.energy_max = em
         self.energy = e
         self.richesse = r
-
+        self.color = color
+        self.rect = NULL
+    
+    def Draw(self, canvas, cellsize):
+       if (self.rect != NULL):
+            canvas.delete(self.rect)
+            
+       self.rect = canvas.create_rectangle(
+           self.position[0] * cellsize,
+           self.position[1] * cellsize,
+           (self.position[0] + 1) * cellsize,
+           (self.position[1] + 1) * cellsize,
+            fill=self.color
+        )
+    
     
     def GetSymbol(self):
        return self.symbole
@@ -30,14 +45,14 @@ class Coder():
         return self.richesse
 
 
-    
-
-
     def ResetEnergy(self):
         self.energy = self.energy_max
         
     def ChangePosition(self,new_position):
        self.position = new_position
+
+    def TranslatePosition(self,translation):
+       self.position = (self.position[0] + translation[0], self.position[1] + translation[1])
 
 
     def UpgradeCodingLevel(self):
@@ -64,10 +79,10 @@ class Coder():
     
     def UpgradeMoneyAmount(self, money_amount):
      print("oui")
-     if self.richesse < 5000 and money_amount <=0 and (self.richesse - money_amount) >= 0: #Le joueur perd de l'argent et on verifie si son argent sera tjrs >=0
+     if self.richesse < 5000 and money_amount <=0 and (self.richesse - money_amount) >= 0: #Le coder perd de l'argent et on verifie si son argent sera tjrs >=0
             print("Jackpot1")
             self.richesse -= money_amount
-     elif self.richesse < 5000 and money_amount >= 0 : #Le joueur gagne de l'argent   
+     elif self.richesse < 5000 and money_amount >= 0 : #Le coder gagne de l'argent   
             print("Jackpot2")
             self.richesse += money_amount
            

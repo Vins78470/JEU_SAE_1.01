@@ -25,21 +25,21 @@ def PrintBoard(Board):
         print("\n" + "  " + " | ".join(Board[i]) + " | " + "\n")
 
 
-def InitialisationJoueur(Board,liste_coder,nb_joueur):
+def InitialisationCoder(Board,liste_coder,nb_coder):
    
     liste_symbole_coder = ['P1','P2','P3','P4']
     
-    for i in range(nb_joueur):
-         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,1,1,0))
+    for i in range(nb_coder):
+         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,1,1,100,"blue"))
     
     return liste_coder
 
 
-def CheckNombreJoueur(nb_joueur):
-    if 1 <= nb_joueur <= 4:
+def CheckNombreCoder(nb_coder):
+    if 1 <= nb_coder <= 4:
         return True
     else:
-        print("Il faut choisir entre 1 et 4 joueurs")
+        print("Il faut choisir entre 1 et 4 coders")
         return False
 
 
@@ -77,6 +77,7 @@ def InitialisationMission(liste_missions,liste_symbole_missions):
     
     return liste_missions
 
+
 # Fonction pour vérifier si une position est dans la première ligne ou colonne
 def est_dans_premiere_ligne_ou_colonne(position):
     x, y = position
@@ -93,8 +94,8 @@ def CherchePosition(potential_position,coup_possible_coder):
 def IsCaseEmpty(position, liste_coder):
     for coder in liste_coder:
         if coder.GetPosition() == position:
-            return False  # La case n'est pas vide, elle est occupée par un joueur
-    return True  # Aucun joueur n'occupe cette case, elle est vide
+            return False  # La case n'est pas vide, elle est occupée par un coder
+    return True  # Aucun coder n'occupe cette case, elle est vide
 
 
 
@@ -102,7 +103,7 @@ def IsMovable(potential_position,coder,liste_coder):
   
     potential_next_position = (coder.GetPosition()[0] + potential_position[0], coder.GetPosition()[1] + potential_position[1])
 
-    #Verification si il y a un autre joueur deja sur la case potentiel
+    #Verification si il y a un autre coder deja sur la case potentiel
     if not IsCaseEmpty(potential_next_position, liste_coder):
         print("Case occupée, choisissez une autre case")
         return False  # La case n'est pas vide, le déplacement n'est pas possible
@@ -130,7 +131,7 @@ def DeletePlayer(Board, coder):
     x, y = coder.GetPosition()
     symbol = coder.GetSymbol()
 
-    # Remplacer le symbole du joueur par une chaîne vide dans la case du tableau
+    # Remplacer le symbole du coder par une chaîne vide dans la case du tableau
     Board[x][y] = Board[x][y].replace(symbol, "  ")
     if Board[10][10] == "   ":
         Board[10][10] == "JC"
@@ -139,7 +140,7 @@ def DeletePlayer(Board, coder):
 def DrawPlayerAtJobCenter(Board, liste_coder):
     symbols = ''
     for coder in liste_coder:
-        symbols += coder.GetSymbol()  # Concatène les symboles des joueurs
+        symbols += coder.GetSymbol()  # Concatène les symboles des coders
 
     Board[10][10] = symbols  # Place les symboles concaténés dans la case [10][10] du plateau
     return Board 
@@ -149,12 +150,12 @@ def DrawPlayerAtJobCenter(Board, liste_coder):
 def UpdateJobCenter(Board, liste_coder):
     center_position = (10, 10)  # Position du centre
 
-    # Vérifie s'il y a un joueur sur la case du centre
+    # Vérifie s'il y a un coder sur la case du centre
     for coder in liste_coder:
         if coder.GetPosition() == center_position:
-            return  # Il y a un joueur, donc on ne change pas la case
+            return  # Il y a un coder, donc on ne change pas la case
 
-    # S'il n'y a aucun joueur sur la case du centre, on la met à jour
+    # S'il n'y a aucun coder sur la case du centre, on la met à jour
     Board[center_position[0]][center_position[1]] = "JC"
 
 # Dessine la mission sur la Board
@@ -167,28 +168,28 @@ def DrawMissions(Board,liste_missions):
     
     return Board
         
-# Quand le joueur passe sur une mission, si elle n'est pas fini on la redessine 
+# Quand le coder passe sur une mission, si elle n'est pas fini on la redessine 
 
 def ReDrawMission(Board,liste_missions,coder):
     mission = FindMissionAssociatedToCoder(liste_missions,coder)
     x,y = mission.GetPosition()
     Board[x][y] = mission.GetSymbol()
-
-# Affiche les infos des joueurs
-
-def AfficherInfosJoueur(liste_coder):
     
-    for i, coder in enumerate(liste_coder, 1):
-        print("Joueur", i, ":")
-        print("  - Symbole:", str(coder.GetSymbol()))
-        print("  - Position:", str(coder.GetPosition()))
-        print("  - Niveau de codage:", str(coder.GetCodingLevel()))
-        print("  - Energie:", str(coder.GetEnergy()), "/ Energie maximale:", str(coder.GetEnergyMax()))
-        print("  - Argent:", str(coder.GetMoneyAmount()), " ฿")
-        print()
 
-        
-    print("\n")
+
+# Affiche les infos des coders
+def AfficherInfosCoder(liste_coder):
+    coder_info_text = ""
+    for i, coder in enumerate(liste_coder, 1):
+        coder_info_text += f"Coder {i} :\n"
+        coder_info_text += f"  - Symbole: {str(coder.GetSymbol())}\n"
+        coder_info_text += f"  - Position: {str(coder.GetPosition())}\n"
+        coder_info_text += f"  - Niveau de codage: {str(coder.GetCodingLevel())}\n"
+        coder_info_text += f"  - Energie: {str(coder.GetEnergy())} / Energie maximale: {str(coder.GetEnergyMax())}\n"
+        coder_info_text += f"  - Argent: {str(coder.GetMoneyAmount())} ฿\n\n"
+
+    return coder_info_text
+
 
 
 def CheckReapparitionMission(compt,mission_supprimé_a_check):
@@ -211,14 +212,17 @@ def UpdateMissions(liste_missions,mission_supprimé_a_check):
 # Affiche les infos des missions
 
 def AfficherInfosMissions(liste_missions):
+    mission_info_text = ""
     for i, mission in enumerate(liste_missions, 1):
-        print(
+        mission_info_text += (
             f"  - Mission {i}: Symbole {mission.GetSymbol()}, "
             f"  - Position: {mission.GetPosition()}, "
-            f"  - Travail de base a faire :  {mission.GetStartingWorkLoad()}"
+            f"  - Travail de base a faire :  {mission.GetStartingWorkLoad()}, "
             f"  - Travail nécessaire: {mission.GetRemainingWorkLoad()}, "
-            f"  - Difficulté: {mission.GetDifficulty()}, "
-        )
+            f"  - Difficulté: {mission.GetDifficulty()}\n"
+        )      
+    return mission_info_text
+
 
 
 
@@ -326,14 +330,19 @@ def CheckJobCenter(Board,coder):
         print(Board[10][10])
 
 
-def MakeChoiceAtJobCenter(coder,liste_missions):
-    requete_job_center = input((" Augmentez son énergie max('a') ou augmenter votre coding level de 1 ('c') : "))
-    if requete_job_center == 'a':
+def AskChoiceAtJobCenter(coder):
+    decisionLetter = input((" Augmentez son énergie max('a') ou augmenter votre coding level de 1 ('c') : "))
+    return decisionLetter
+
+def MakeChoiceAtJobCenter(coder, decisionLetter):
+    
+    if decisionLetter == 'a':
         if CoutDepenseArgentAuJobCenterPourEnergyMax(coder):
             return coder.UpgradeEnergyMax()
-    elif requete_job_center == 'c':
+    elif decisionLetter == 'c':
         CoutDepenseArgentAujobCenterPourCodingLevel(coder)
         return coder.UpgradeCodingLevel()
+    
     coder.ResetEnergy()
 
 
