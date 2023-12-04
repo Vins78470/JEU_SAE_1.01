@@ -5,7 +5,7 @@ class Coder():
     
     def __init__(self,s,p,cl, em, e, r, color):
         self.symbole = s
-        self.position = p
+        self.cell = p
         self.coding_level = cl
         self.energy_max = em
         self.energy = e
@@ -18,10 +18,10 @@ class Coder():
             canvas.delete(self.rect)
             
        self.rect = canvas.create_rectangle(
-           self.position[0] * cellsize,
-           self.position[1] * cellsize,
-           (self.position[0] + 1) * cellsize,
-           (self.position[1] + 1) * cellsize,
+           self.cell[1] * cellsize,
+           self.cell[0] * cellsize,
+           (self.cell[1] + 1) * cellsize,
+           (self.cell[0] + 1) * cellsize,
             fill=self.color
         )
     
@@ -30,7 +30,7 @@ class Coder():
        return self.symbole
     
     def GetPosition(self):
-       return self.position
+       return self.cell
     
     def GetCodingLevel(self):
        return self.coding_level
@@ -49,11 +49,10 @@ class Coder():
         self.energy = self.energy_max
         
     def ChangePosition(self,new_position):
-       self.position = new_position
+       self.cell = new_position
 
-    def TranslatePosition(self,translation):
-       self.position = (self.position[0] + translation[0], self.position[1] + translation[1])
-
+    def MovePosition(self,move):
+       self.cell = (self.cell[0] + move[0], self.cell[1] + move[1])
 
     def UpgradeCodingLevel(self):
         if self.coding_level < 10:
@@ -90,64 +89,6 @@ class Coder():
         print("Vous ne possédez pas assez d'argent. Votre solde doit être supérieur à " + str(money_amount) + " ฿")
         
 
-class Mission():
-    
-    def __init__(self,s, sw, rw,d,p):
-        self.symbole = s
-        self.starting_workload= sw
-        self.remaining_workload = rw
-        self.difficulty = d             
-        self.position = p
-        
-
-    # Valeurs initiales pour que quand la mission réapparaisse elle reprenne ses attributs
-        self.symbole_initial = s
-        self.starting_workload_initial = sw
-        self.remaining_workload_initial = rw
-        self.difficulty_initial = d
-        self.position_initial = p
-        
-
-
-    def GetSymbol(self):
-        return self.symbole
-
-    def GetPosition(self):
-        return self.position
-
-    def GetStartingWorkLoad(self):
-        return self.starting_workload
-    
-    def GetRemainingWorkLoad(self):
-        return self.remaining_workload
-       
-    
-    def GetDifficulty(self):
-        return self.difficulty
-
-
-
-    def ResetValues(self):
-        self.symbole = self.symbole_initial
-        self.starting_workload = self.starting_workload_initial
-        self.remaining_workload = self.remaining_workload_initial
-        self.difficulty = self.difficulty_initial
-        self.position = self.position_initial
-       
-    def UpgradeRemaningWorkLoad(self,amount):
-        self.remaining_workload += amount
-    
-    def UpgradeRemainingWorkLoad(self,amount):
-        if self.remaining_workload - amount >=0:
-            self.remaining_workload += amount
-        else:
-            print("oe")
-    
-    def ResetRemainingWorkLoad(self):
-        self.remaining_workload = 0
-
-
-    
     
 
 

@@ -1,5 +1,6 @@
 import random
-from Class import *
+from Coder import *
+from Mission import *
 import string
 
 def InitBoard(Board):
@@ -24,24 +25,12 @@ def PrintBoard(Board):
     for i in range(len(Board)):
         print("\n" + "  " + " | ".join(Board[i]) + " | " + "\n")
 
-
-def InitialisationCoder(Board,liste_coder,nb_coder):
-   
-    liste_symbole_coder = ['P1','P2','P3','P4']
-    
-    for i in range(nb_coder):
-         liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,1,1,0,"blue"))
-    
-    return liste_coder
-
-
 def CheckNombreCoder(nb_coder):
     if 1 <= nb_coder <= 4:
         return True
     else:
         print("Il faut choisir entre 1 et 4 coders")
         return False
-
 
 def CheckDirectionInput(potential_position,coup_possible_coder):
     if potential_position in coup_possible_coder:
@@ -50,34 +39,6 @@ def CheckDirectionInput(potential_position,coup_possible_coder):
         print("Il faut choisir entre les touches h, b, g, d")
         return False
         
-
-
-
-#Genere le nombre de missions qu'il y aura et créer des symboles pour ces missions
-def GenerateSymbolMission(liste_symbole_missions):   
-    
-    nb_de_mission = random.randint(4,10)
-
-    for j in range (1,nb_de_mission):
-        liste_symbole_missions.append("M"+str(j))
-   
-    return liste_symbole_missions
-
-
-# Prend en argument la géneration des symboles et par consequent son nombre de missions et créer des objets missions puis les mets dans une liste de mission
-
-def InitialisationMission(liste_missions,liste_symbole_missions):
-
-    for i in range(len(liste_symbole_missions)):
-
-         random_i = random.randint(1,20)
-         random_j = random.randint(1,20)
-
-         liste_missions.append(Mission(liste_symbole_missions[i],2,2,2,(random_i,random_j)))
-    
-    return liste_missions
-
-
 # Fonction pour vérifier si une position est dans la première ligne ou colonne
 def est_dans_premiere_ligne_ou_colonne(position):
     x, y = position
@@ -90,14 +51,11 @@ def CherchePosition(potential_position,coup_possible_coder):
             return valeur 
 
 
-
 def IsCaseEmpty(position, liste_coder):
     for coder in liste_coder:
         if coder.GetPosition() == position:
             return False  # La case n'est pas vide, elle est occupée par un coder
     return True  # Aucun coder n'occupe cette case, elle est vide
-
-
 
 def IsMovable(potential_position,coder,liste_coder):
   
@@ -119,13 +77,11 @@ def IsMovable(potential_position,coder,liste_coder):
         return False  # La prochaine position est en dehors des limites de la grille
 
 
-
-def DrawPlayer(Board, potential_position, coder):
-    new_position = (coder.GetPosition()[0] + potential_position[0], coder.GetPosition()[1] + potential_position[1])
-    coder.ChangePosition(new_position)
+def DrawPlayer(Board, coder):
 
     # Utilisation de nouvelles_positions[0] et nouvelles_positions[1] pour accéder aux indices x et y
-    Board[new_position[0]][new_position[1]] = coder.GetSymbol()
+    Board[coder.cell[0]][coder.cell[1]] = coder.GetSymbol()
+
     
 def DeletePlayer(Board, coder):
     x, y = coder.GetPosition()

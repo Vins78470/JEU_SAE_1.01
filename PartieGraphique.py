@@ -1,15 +1,16 @@
 from tkinter import *
-from Class import *
+from Coder import *
+from Mission import *
 from Rules import AfficherInfosCoder, AfficherInfosMissions
 from Game import *
 # coding: utf-8
 
 
 
-class WindowAndGame:
+class WindowForGame:
 
     
-    def __init__(self, cell_size=50, nb_cell_width=21, nb_cell_height=21):
+    def __init__(self, game, cell_size=50, nb_cell_width=21, nb_cell_height=21):
       
         self.CELL_SIZE = cell_size
         self.NB_CELL_WIDTH = nb_cell_width
@@ -17,7 +18,7 @@ class WindowAndGame:
         self.WIDTH = self.CELL_SIZE * self.NB_CELL_WIDTH
         self.HEIGHT = self.CELL_SIZE * self.NB_CELL_HEIGHT
           
-        self.game = Game()
+        self.game = game
 
         self.window = Tk()
         self.window.title("ESN GAME")
@@ -112,8 +113,7 @@ class WindowAndGame:
             moveDirection = (0, 1)
     
         if moveDirection != (0, 0):
-            coder.TranslatePosition(moveDirection)
-            self.game.playRound(coder, moveDirection)
+            self.game.playOneRound(coder, moveDirection, self.round)
             self.round += 1
         elif CheckJobCenter(self.game.Board, coder):
             if keyPressed == 'a':
