@@ -1,19 +1,20 @@
-from turtle import clearscreen
+
+
 from Rules import *
 from Coder import *
 from Mission import *
 from Configuration import *
 import json
-import sys, subprocess
+
 # -*- coding: utf-8 -*-
 
 class Game():
 
-    def __init__(self, nb_coder, level):
-   
+    def __init__(self, nb_coder,level,nb_de_missions):
+        
+        self.nb_de_mission = nb_de_missions
         self.nb_coder = nb_coder
         self.configuration = Configuration(level)
-        
         self.mission_supprime_a_check = 0
         self.compt = 0
         self.letter2MoveDictionnary = {'h': (-1, 0), 'b': (1, 0), 'g': (0, -1), 'd': (0, 1)}
@@ -27,11 +28,16 @@ class Game():
 
     def InitialisationMission(self):
 
-        for i in range(len(self.liste_symbole_missions)):
+        for i in range(self.nb_de_mission):
 
              random_i = random.randint(1,20)
              random_j = random.randint(1,20)
-
+             
+            # Met a jour le fichier JSON pour que les paramètres des missions soit differents.
+             self.configuration.UpdateFile()
+          
+        
+             
              self.liste_missions.append(Mission(self.liste_symbole_missions[i], 
                                                 self.configuration.starting_workload, 
                                                 self.configuration.difficulty ,
@@ -41,18 +47,17 @@ class Game():
     def InitialisationCoder(self):
    
         liste_symbole_coder = ['P1','P2','P3','P4']
-    
+        
+        
         for i in range(self.nb_coder):
-             self.liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,1,1,0,"blue"))
+             self.liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,100,100,500,"blue"))
     
 
 
-    #Genere le nombre de missions qu'il y aura et créer des symboles pour ces missions
-    def GenerateSymbolMission(self):   
-    
-        nb_de_mission = random.randint(4,10)
+    # Genere le nombre de missions qu'il y aura et créer des symboles pour ces missions
 
-        for j in range (1,nb_de_mission):
+    def GenerateSymbolMission(self):    
+        for j in range (self.nb_de_mission):
             self.liste_symbole_missions.append("M"+str(j))
 
 
@@ -78,7 +83,6 @@ class Game():
             self.start()
 
     def play(self):
-        subprocess.run('cls', shell=True)
         for round in range(1, 500):  # Par exemple, 500 tours
             for coder in self.liste_coder:
                 print(AfficherInfosMissions(self.liste_missions))
@@ -109,27 +113,39 @@ class Game():
                 DrawPlayer(self.Board, coder)
                 UpdateJobCenter(self.Board, self.liste_coder)
                 PrintBoard(self.Board)  # Affiche la Board
-
+           
+            mission = FindMissionAssociatedToCoder(self.liste_missions,coder)
+    
             if IsCoderOnaMission(coder, self.liste_missions):
-                print("t'es sur une mission")
+                     
+                  if mission.est_disponible():
+                        
+                        print("t'es sur une mission")
 
-                if EnoughEnergy(coder):
-                    DepenseCoderEnergyPourLaMission(coder, self.liste_missions)
-                    DepenseRwMission(coder, self.liste_missions)
+                        if EnoughEnergy(coder):
+                            DepenseCoderEnergyPourLaMission(coder, self.liste_missions)
+                            DepenseRwMission(coder, self.liste_missions)
 
-                if IsFinishMission(coder, self.liste_missions):
-                    MissionIsFinishedYouWinMoney(coder, self.liste_missions)
-                    self.mission_supprime_a_check = DeleteMission(self.liste_missions, coder)
-                else:
-                    ReDrawMission(self.Board, self.liste_missions, coder)
-                    self.compt += 1
+                        if IsFinishMission(coder, self.liste_missions):
+                            MissionIsFinishedYouWinMoney(coder, self.liste_missions)
+                            mission.rendre_indisponible(5)
+                        else:
+                            ReDrawMission(self.Board, self.liste_missions, coder)
+                     
+                  else:
+                      print("Mission Non Disponible !")
 
-            if self.mission_supprime_a_check != 0:
-                if CheckReapparitionMission(self.compt, self.mission_supprime_a_check): 
-                    UpdateMissions(self.liste_missions, self.mission_supprime_a_check)
             
             if CheckJobCenter(self.Board,coder) :
                 self.checkCoderEnergy(coder, round)
+                
+            if mission != None and mission.est_disponible()== False:
+                 mission.decrementer_indisponibilite()
+                 if mission.est_indisponible():   
+                    ReDrawMission(self.Board, self.liste_missions, coder)
+                    mission.ResetValues()
+
+                
 
 
     def checkCoderEnergy(self, coder, round):

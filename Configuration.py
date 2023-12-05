@@ -1,43 +1,50 @@
 import json
 import random
 
-
 class Configuration:
-
+    
     def __init__(self, level):
-
+       
         self.starting_workload = 1
         self.difficulty = 1
-
-        if level == "facile":
-            starting_workload = random.randint(1, 5)
-            difficulty = random.randint(1, 3)
-            self.WriteToFile('facile_missions.json');
-        elif level == "intermediaire":
-            starting_workload = random.randint(4, 8)
-            difficulty = random.randint(4, 5)
-            self.WriteToFile('intermediaire_missions.json');
-        elif level == "difficile":
-            starting_workload = random.randint(7, 10)
-            difficulty = random.randint(6, 7)
-            self.WriteToFile('difficile_missions.json');
+        self.level = level
+        self.json_file = f'{level}_missions.json'
+        self.liste_data_mission = []
+        self.UpdateFile()
+        self.ReadFromFile()
         
-        mission_data = {
-            "starting_workload": starting_workload,
-            "difficulty": difficulty
-        }
-
+    def UpdateFile(self):
+        if self.level == "facile":
+            self.starting_workload = random.randint(1, 3)
+            self.difficulty = random.randint(1, 3)
+         
             
-    def ReadFromFile(self, jsonfile):            
-
-        # Enregistrer les listes de missions dans des fichiers JSON distincts
-        with open(jsonfile, 'r') as file:
-            json.dump(self, file, indent=4)
+        elif self.level == "intermediaire":
+            self.starting_workload = random.randint(4, 8)
+            self.difficulty = random.randint(4, 8)
+          
+            
+        elif self.level == "difficile":
+            self.starting_workload = random.randint(9, 12)
+            self.difficulty = random.randint(8, 12)
+          
         
-
-    def WriteToFile(self, jsonfile):            
-
-        # Enregistrer les listes de missions dans des fichiers JSON distincts
-        #with open(jsonfile, 'w') as file:
-        #    json.dump(self, file, indent=4)
-        pass
+        self.WriteToFile()
+        
+    def WriteToFile(self):
+        mission_data = {
+            "starting_workload": self.starting_workload,
+            "difficulty": self.difficulty
+        }
+        
+        with open(self.json_file, 'w') as file:
+            json.dump(mission_data, file, indent=4)
+            
+    def ReadFromFile(self):
+        try:
+            with open(self.json_file, 'r') as file:
+                data = json.load(file)
+                self.starting_workload = data["starting_workload"]
+                self.difficulty = data["difficulty"]
+        except FileNotFoundError:
+            pass  # File not found, will create new data in UpdateFile()

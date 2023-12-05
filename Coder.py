@@ -73,6 +73,10 @@ class Coder():
              
          if self.energy - energy_amount <= self.energy_max :
              self.energy +=energy_amount
+             
+         elif self.energy + energy_amount <= self.energy_max  :
+            self.energy +=energy_amount
+            
          else:
              self.energy = 0
     

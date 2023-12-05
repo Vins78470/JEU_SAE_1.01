@@ -10,6 +10,7 @@ class Mission():
         self.remaining_workload = starting_workload
         self.difficulty = difficulty             
         self.position = position
+        self.indisponible_tours = 0  # Nombre de tours pendant lesquels la mission sera indisponible
         
     # Valeurs initiales pour que quand la mission réapparaisse elle reprenne ses attributs
         self.symbole_initial = symbol
@@ -17,6 +18,22 @@ class Mission():
         self.remaining_workload_initial = starting_workload
         self.difficulty_initial = difficulty
         self.position_initial = position
+
+    # ... autres méthodes de la classe Mission ...
+
+    def rendre_indisponible(self, tours):
+        self.indisponible_tours = tours
+       
+    
+    def est_disponible(self):
+        return self.indisponible_tours == 0
+    
+    def est_indisponible(self):
+        return self.indisponible_tours < 0
+
+    def decrementer_indisponibilite(self):
+        if self.indisponible_tours > 0:
+            self.indisponible_tours -= 1
 
     def GetSymbol(self):
         return self.symbol
@@ -40,14 +57,12 @@ class Mission():
         self.difficulty = self.difficulty_initial
         self.position = self.position_initial
        
-    def UpgradeRemaningWorkLoad(self,amount):
-        self.remaining_workload += amount
     
     def UpgradeRemainingWorkLoad(self,amount):
         if self.remaining_workload - amount >=0:
             self.remaining_workload += amount
         else:
-            print("oe")
+            print("BUG")
     
     def ResetRemainingWorkLoad(self):
         self.remaining_workload = 0

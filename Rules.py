@@ -148,9 +148,6 @@ def AfficherInfosCoder(liste_coder):
 
 
 
-def CheckReapparitionMission(compt,mission_supprimé_a_check):
-
-   return compt == mission_supprimé_a_check.GetDifficulty()*5
 
 
 def DeleteMission(liste_missions, coder):
@@ -160,10 +157,6 @@ def DeleteMission(liste_missions, coder):
     return tmp_mission
 
 
-# Cette partie du code s'exécuterait à chaque tour
-def UpdateMissions(liste_missions,mission_supprimé_a_check):
-    
-    return liste_missions.append(mission_supprimé_a_check)
 
 # Affiche les infos des missions
 
