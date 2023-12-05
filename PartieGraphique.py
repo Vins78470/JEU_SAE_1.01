@@ -10,14 +10,13 @@ from Game import *
 class WindowForGame:
 
     
-    def __init__(self, game, cell_size=50, nb_cell_width=21, nb_cell_height=21):
+    def __init__(self, game, cell_size, nb_cell_width, nb_cell_height):
       
         self.CELL_SIZE = cell_size
         self.NB_CELL_WIDTH = nb_cell_width
         self.NB_CELL_HEIGHT = nb_cell_height
         self.WIDTH = self.CELL_SIZE * self.NB_CELL_WIDTH
-        self.HEIGHT = self.CELL_SIZE * self.NB_CELL_HEIGHT
-          
+        self.HEIGHT = self.CELL_SIZE * self.NB_CELL_HEIGHT    
         self.game = game
 
         self.window = Tk()
@@ -27,7 +26,7 @@ class WindowForGame:
         self.canvas.pack()
 
 
-        self.draw_board()  # Appel à la méthode draw_board() pour dessiner la grille dès la création de la fenêtre
+        self.draw_board()  # Appel ï¿½ la mï¿½thode draw_board() pour dessiner la grille dï¿½s la crï¿½ation de la fenï¿½tre
     
         
         self.canvas.bind_all('<KeyPress>', self.move_coder)
@@ -35,7 +34,7 @@ class WindowForGame:
         self.missions_label = Label(self.window, text="")
         self.coder_label = Label(self.window, text="")
         
-        # Placer le texte "JC" au milieu à la position (10, 10)
+        # Placer le texte "JC" au milieu ï¿½ la position (10, 10)
         self.canvas.create_text(10 * self.CELL_SIZE + self.CELL_SIZE // 2,
                                 10 * self.CELL_SIZE + self.CELL_SIZE // 2,
                                 text="JC",
@@ -45,26 +44,26 @@ class WindowForGame:
         self.round = 0
         
     def afficher_info_missions(self, liste_missions):
-        # Création de la chaîne de texte pour les informations sur les missions
+        # Crï¿½ation de la chaï¿½ne de texte pour les informations sur les missions
         mission_info_text = "Liste des missions :\n"
         mission_info_text = AfficherInfosMissions(liste_missions)
 
         self.missions_label.destroy()
         self.missions_label = Label(self.window, text=mission_info_text)
-        # Création du label avec les informations des missions
+        # Crï¿½ation du label avec les informations des missions
         #mission_info_label = Label(self.window, text=mission_info_text)
-        self.missions_label.pack(side="right",anchor="n", fill='y', padx=10, pady=10)
+        self.missions_label.pack(side="right",anchor="n", padx=10, pady=10)
         #self.mission_info_label.text = mission_info_text
         
     def afficher_infos_coder(self,liste_coder):
-        # Création de la chaîne de texte pour les informations sur le coder
+        # Crï¿½ation de la chaï¿½ne de texte pour les informations sur le coder
         mission_info_text = "Infos coder(s) :\n"
         mission_info_text = AfficherInfosCoder(liste_coder)
 
         self.coder_label.destroy()
         self.coder_label = Label(self.window, text=mission_info_text)
         
-        # Création du label avec les informations des missions
+        # Crï¿½ation du label avec les informations des missions
         self.coder_label.pack(side="left",anchor="n", fill='y', padx=10, pady=10)
 
         
@@ -98,6 +97,7 @@ class WindowForGame:
            
     
     def move_coder(self, event):
+        
         keyPressed = event.keysym
         moveDirection = (0, 0)
         current_coder_index = (self.round + 1) % self.game.nb_coder

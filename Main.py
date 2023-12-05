@@ -40,9 +40,9 @@ def Play(game, mode):
     if (mode == 0):
         game.play()
     elif (mode == 1): 
-        windowForGame = WindowForGame(game, cell_size=50, nb_cell_width=21, nb_cell_height=21)
+        windowForGame = WindowForGame(game, cell_size=30, nb_cell_width=21, nb_cell_height=21)
         windowForGame.draw()
         windowForGame.window.mainloop()
        
 
-Play(game, 0)
+Play(game, 1)
