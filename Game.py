@@ -22,6 +22,7 @@ class Game():
         self.liste_missions = []
         self.liste_coder = []
         self.Board = []
+        self.isGameFinished = False
         
 # Prend en argument la géneration des symboles et par consequent son nombre de missions et créer des objets missions puis les mets dans une liste de mission
 
@@ -50,7 +51,7 @@ class Game():
         
         
         for i in range(self.nb_coder):
-             self.liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,100,100,500,"blue"))
+             self.liste_coder.append(Coder(liste_symbole_coder[i],(10,10),1,1,1,0,"blue"))
     
 
 
@@ -64,7 +65,7 @@ class Game():
     def start(self):
 
         self.Board = InitBoard(self.Board)  # Initialise la board 21*21
-        print("Bienvenue sur ESN Wars.")
+        print(" Bienvenue sur ESN Wars ! ")
         print("\n")
    
         if CheckNombreCoder(self.nb_coder):
@@ -79,34 +80,60 @@ class Game():
             PrintBoard(self.Board)  # Affiche la Board dans la console après les initialisations
             
         else:
-            print("Choisissez entre 1 et 4 joueurs")
+            print(" Choisissez entre 1 et 4 joueurs : ")
             self.start()
 
     def play(self):
-        for round in range(1, 500):  # Par exemple, 500 tours
-            for coder in self.liste_coder:
-                print(AfficherInfosMissions(self.liste_missions))
-                print("--------------------------------------------------------------------------------------------------------------------")
-                print("\n")
-                print(AfficherInfosCoder(self.liste_coder))
-                print("--------------------------------------------------------------------------------------------------------------------")
+        while not self.isGameFinished:
+            for round in range(1, 500):  # Par exemple, 500 tours
+                for coder in self.liste_coder:
+                    print(AfficherInfosMissions(self.liste_missions))
+                    print("--------------------------------------------------------------------------------------------------------------------")
+                    print("\n")
+                    print(AfficherInfosCoder(self.liste_coder))
+                    print("--------------------------------------------------------------------------------------------------------------------")
 
-                print(f"Tour {round}, Coder {coder.GetSymbol()}")
-
-                moveLetter = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
-                print("\n")
-                moveDirection = CherchePosition(moveLetter, self.letter2MoveDictionnary)
-                
-                if CheckDirectionInput(moveLetter, self.letter2MoveDictionnary):
-                    self.playOneRound(coder, moveDirection, round)
+                    print(f"Tour {round}, Coder {coder.GetSymbol()}")
                     
+                    # Regarde si l'utilisateur a bien entré une touche valide
+                    valid_letters = self.letter2MoveDictionnary.keys()
+                    
+                    moveLetter = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
 
-                else:
-                    print("choisir une touche valide")
-             
+                    while moveLetter not in valid_letters:
+                        print("\n")
+                        print("Veuillez entrer une lettre valide.")
+                        print("\n")
+                        moveLetter = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
+
+                    print("\n")
+                    # 
+                    moveDirection = CherchePosition(moveLetter, self.letter2MoveDictionnary)
+
+                    if CheckDirectionInput(moveLetter, self.letter2MoveDictionnary):
+                        self.playOneRound(coder, moveDirection, round)
+
+                    else:
+                        print("Choisir une touche valide")
+
+                    if GameIsOver(coder):
+                        self.isGameFinished = True
+                        break  # Sortir de la boucle des joueurs si un joueur a terminé
+            
+                if self.isGameFinished:
+                    break  # Sortir de la boucle principale si un joueur a terminé
+
+        if self.isGameFinished:
+            print("\n")
+            print("Le jeu est fini " + str(coder.GetSymbol()) + " a gagne ")
+            print("\n")
+        else:
+            print("\n")
+            print("La limite de tours est atteinte")
+            print("\n")
+
 
     def playOneRound(self, coder, move, round):
-
             if IsMovable(move, coder, self.liste_coder):
                 DeletePlayer(self.Board, coder)
                 coder.MovePosition(move)
@@ -114,43 +141,44 @@ class Game():
                 UpdateJobCenter(self.Board, self.liste_coder)
                 PrintBoard(self.Board)  # Affiche la Board
            
-            mission = FindMissionAssociatedToCoder(self.liste_missions,coder)
+            mission_for_coder = FindMissionAssociatedToCoder(self.liste_missions,coder)
     
             if IsCoderOnaMission(coder, self.liste_missions):
                      
-                  if mission.est_disponible():
-                        
-                        print("t'es sur une mission")
-
+                  if mission_for_coder.est_disponible():
+                        print("\n")
+                        print(" Vous venez d'arrivez sur une mission ! ")
+                        print("\n")
                         if EnoughEnergy(coder):
                             DepenseCoderEnergyPourLaMission(coder, self.liste_missions)
                             DepenseRwMission(coder, self.liste_missions)
 
                         if IsFinishMission(coder, self.liste_missions):
                             MissionIsFinishedYouWinMoney(coder, self.liste_missions)
-                            mission.rendre_indisponible(5)
+                            mission_for_coder.rendre_indisponible(mission_for_coder.GetDifficulty()*10)
                         else:
                             ReDrawMission(self.Board, self.liste_missions, coder)
                      
                   else:
-                      print("Mission Non Disponible !")
+                      print(" Mission Non Disponible ! ")
 
             
             if CheckJobCenter(self.Board,coder) :
                 self.checkCoderEnergy(coder, round)
-                
-            if mission != None and mission.est_disponible()== False:
-                 mission.decrementer_indisponibilite()
-                 if mission.est_indisponible():   
-                    ReDrawMission(self.Board, self.liste_missions, coder)
+            
+            # On boucle sur la liste de mission pour voir si une mission est disponible
+            # => (dans ce cas on reset ces valeurs et on la redessine) si elle indisponible on décremente le compteur
+            for mission in self.liste_missions:
+                if mission.est_disponible() == False:
+                    mission.decrementer_indisponibilite()
                     mission.ResetValues()
+                if mission.est_disponible():   
+                        mission.RedrawAfterMissionNotAvailable(self.Board)
 
-                
-
-
+               
     def checkCoderEnergy(self, coder, round):
         if CheckJobCenter(self.Board, coder) and round >= 2:
-            print("Vous etes bien sur le JOB CENTER")
+            print("Vous etes bien sur le Job Center")
             print("\n")
 
         MakeChoiceAtJobCenter(coder, AskChoiceAtJobCenter())

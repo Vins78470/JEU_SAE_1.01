@@ -58,27 +58,26 @@ class Coder():
         if self.coding_level < 10:
            self.coding_level +=1
         else:
-            print("Vous êtes deja au niveau max")
+            print(" Vous etes deja au niveau max !")
 
     def UpgradeEnergyMax(self):
          if self.energy_max < 10:
            self.energy_max += 1
          else:
-            print("Vous avez deja l'energie max")
+            print(" Vous avez deja l'energie max !")
               
     
-    def UpgradeEnergy(self,energy_amount):
-         if self.energy < 0:
-             self.energy = 0
-             
-         if self.energy - energy_amount <= self.energy_max :
-             self.energy +=energy_amount
-             
-         elif self.energy + energy_amount <= self.energy_max  :
-            self.energy +=energy_amount
-            
-         else:
-             self.energy = 0
+    def UpgradeEnergy(self, energy_amount):
+        
+        if self.energy + energy_amount <= self.energy_max:
+            self.energy += energy_amount
+        
+        if self.energy < 0:
+            self.energy = 0
+
+        else:
+            self.energy = self.energy_max
+
     
     def UpgradeMoneyAmount(self, money_amount):
    
@@ -90,7 +89,7 @@ class Coder():
             self.richesse += money_amount
            
      else:
-        print("Vous ne possédez pas assez d'argent. Votre solde doit être supérieur à " + str(money_amount) + " ฿")
+        print(" Vous ne possédez pas assez d'argent. Votre solde doit être supérieur à " + str(money_amount) + " ฿  !")
         
 
     

@@ -22,21 +22,30 @@ def InitBoard(Board):
     return Board
  
 def PrintBoard(Board):
+    max_length = max(len(symbol) for row in Board for symbol in row)  # Longueur maximale des symboles
     for i in range(len(Board)):
-        print("\n" + "  " + " | ".join(Board[i]) + " | " + "\n")
+        row = " | ".join(symbol.rjust(max_length) for symbol in Board[i])  # Alignement des symboles à droite
+        print("\n" + "  " + row + " | " + "\n")
+
+
 
 def CheckNombreCoder(nb_coder):
     if 1 <= nb_coder <= 4:
         return True
     else:
-        print("Il faut choisir entre 1 et 4 coders")
+        print(" Choisissez entre 1 a 4 coders ")
         return False
+
+
+def CheckLevelChoice(difficultyChoice):
+    valid_difficulties = ["facile", "intermediaire", "difficile"]
+    return difficultyChoice in valid_difficulties
 
 def CheckDirectionInput(potential_position,coup_possible_coder):
     if potential_position in coup_possible_coder:
         return True
     else:
-        print("Il faut choisir entre les touches h, b, g, d")
+        #print(" Il faut choisir entre les touches haut (h), bas (b), gauche (g), droite (d) : ")
         return False
         
 # Fonction pour vérifier si une position est dans la première ligne ou colonne
@@ -63,7 +72,8 @@ def IsMovable(potential_position,coder,liste_coder):
 
     #Verification si il y a un autre coder deja sur la case potentiel
     if not IsCaseEmpty(potential_next_position, liste_coder):
-        print("Case occupée, choisissez une autre case")
+        print("Case occupée, choisissez une autre case !")
+        print("\n")
         return False  # La case n'est pas vide, le déplacement n'est pas possible
  
     # Vérification si la prochaine position est dans la première ligne ou colonne
@@ -132,6 +142,9 @@ def ReDrawMission(Board,liste_missions,coder):
     Board[x][y] = mission.GetSymbol()
     
 
+    
+    
+
 
 # Affiche les infos des coders
 def AfficherInfosCoder(liste_coder):
@@ -186,10 +199,10 @@ def IsCoderOnaMission(coder, list_missions):
 
 
 
-""" Lorsqu'un coder, à la fin de son tour, dispose de 5000฿, alors le match se termine"""
+""" Lorsqu'un coder, à la fin de son round, dispose de 5000฿, alors le match se termine"""
+
 def GameIsOver(coder):
-    if coder.GetMoneyAmount(coder)==5000:
-       print("Game Over")
+    if coder.GetMoneyAmount() >= 5000:
        return True
     else:
        return False
@@ -200,7 +213,6 @@ def FindMissionAssociatedToCoder(liste_missions,coder):
     for mission in liste_missions:
         if coder.GetPosition() == mission.GetPosition():
             return mission
-    print("pas de msision la ")
 
 
 
@@ -212,7 +224,8 @@ def CoutDepenseArgentAuJobCenterPourEnergyMax(coder):
         coder.UpgradeMoneyAmount(-((coder.GetEnergyMax()+1)**2)*10)
         return True
     else:
-        print("Vous n'avez pas assez d'argent pour augmenter votre energy max ") 
+        print(" Vous n'avez pas assez d'argent pour augmenter votre energie max. ") 
+        print("\n")
         return False
 
 
@@ -221,7 +234,8 @@ def CoutDepenseArgentAujobCenterPourCodingLevel(coder):
     if (coder.GetMoneyAmount() - ((coder.GetCodingLevel()+1)**2)*10) >= 0:
         return coder.UpgradeMoneyAmount(-((coder.GetCodingLevel()+1)**2)*10)
     else:
-         print("Vous n'avez pas assez d'argent pour augmenter votre coding level")  
+         print(" Vous n'avez pas assez d'argent pour augmenter votre coding level. ")
+         print("\n")
 
         
 """le coder perd un nombre de points d'energie égal à la difficulté de la mission"""
@@ -252,17 +266,16 @@ def IsFinishMission(coder, liste_missions):
 
 def MissionIsFinishedYouWinMoney(coder,liste_missions):
         mission = FindMissionAssociatedToCoder(liste_missions,coder)
-        print("c winnn")
         return coder.UpgradeMoneyAmount(mission.GetStartingWorkLoad()*mission.GetDifficulty())
 
 
 
 def EnoughEnergy(coder):
     if coder.GetEnergy() > 0:
-        print("Tu peux faire la mission !")
         return True
     else:
-        print("Pas assez d'énergie pour faire la mission retournez au job center !")
+        print(" Vous n'avez pas assez d'énergie pour faire la mission retournez au job center ! ")
+        print("\n")
 
 
 
@@ -272,18 +285,18 @@ augmenter de 1 son énergie max ;
 ou bien augmenter de 1 son coding level."""
 
 def CheckJobCenter(Board,coder):
-    print("ca rentre la")
     x,y = coder.GetPosition()
     if Board[10][10] == Board[x][y]:
-        print('est vrai')
         return True
     else:
-        print('est faux')
         return False
 
 
 def AskChoiceAtJobCenter():
-    decisionLetter = input(" Augmentez son énergie max('a') ou augmenter votre coding level de 1 ('c') : ")
+    print("\n")
+    decisionLetter = input(" Augmentez son énergie max('a') ou augmenter votre coding level de 1 ('c') ou ne faites rien (choisir une direction): ")
+    print("\n")
+    print("\n")
     return decisionLetter
 
 def MakeChoiceAtJobCenter(coder, decisionLetter):

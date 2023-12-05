@@ -13,7 +13,20 @@ mode = 1 #window
 
 nb_coder = int(input(("A combien de coder(s) voulez vous jouer ? ")))
 
+
+# Verifie que l'utilisateur choisis entre 1 et 4 joueurs.
+
+if CheckNombreCoder(nb_coder) == False:
+   nb_coder = int(input(("A combien de coder(s) voulez vous jouer ? ")))
+   
+
+# Verifie que l'utilisateur choisis entre les 3 niveaux de difficultes.
 difficultyChoice = input("Choisissez le niveau voulu (facile / intermediaire / difficile): ")
+
+if CheckLevelChoice(difficultyChoice) == False:
+    difficultyChoice = input("Choisissez le niveau voulu (facile / intermediaire / difficile): ")
+    
+
 
 if (difficultyChoice == "facile"):
     game = Game(nb_coder, difficultyChoice,nb_de_missions=random.randint(15,20))
@@ -29,20 +42,13 @@ else:
    
 
 
-
-
-#game2 = Game(nb_coder, "intermediaire")
-#game3 = Game(nb_coder, "difficile")
-#game.Configuration.ReadFromFile()
-
 def Play(game, mode):
-    game.start()
-    if (mode == 0):
-        game.play()
-    elif (mode == 1): 
-        windowForGame = WindowForGame(game, cell_size=30, nb_cell_width=21, nb_cell_height=21)
-        windowForGame.draw()
-        windowForGame.window.mainloop()
-       
+        game.start()
+        if (mode == 0):
+            game.play()
+        elif (mode == 1): 
+            windowForGame = WindowForGame(game, cell_size=30, nb_cell_width=21, nb_cell_height=21)
+            windowForGame.draw()
+            windowForGame.window.mainloop()
 
 Play(game, 1)

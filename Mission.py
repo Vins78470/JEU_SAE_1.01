@@ -10,7 +10,7 @@ class Mission():
         self.remaining_workload = starting_workload
         self.difficulty = difficulty             
         self.position = position
-        self.indisponible_tours = 0  # Nombre de tours pendant lesquels la mission sera indisponible
+        self.indisponible_round = 0  # Nombre de round pendant lesquels la mission sera indisponible
         
     # Valeurs initiales pour que quand la mission réapparaisse elle reprenne ses attributs
         self.symbole_initial = symbol
@@ -21,19 +21,6 @@ class Mission():
 
     # ... autres méthodes de la classe Mission ...
 
-    def rendre_indisponible(self, tours):
-        self.indisponible_tours = tours
-       
-    
-    def est_disponible(self):
-        return self.indisponible_tours == 0
-    
-    def est_indisponible(self):
-        return self.indisponible_tours < 0
-
-    def decrementer_indisponibilite(self):
-        if self.indisponible_tours > 0:
-            self.indisponible_tours -= 1
 
     def GetSymbol(self):
         return self.symbol
@@ -50,6 +37,25 @@ class Mission():
     def GetDifficulty(self):
         return self.difficulty
 
+    def rendre_indisponible(self, round):
+        self.indisponible_round = round
+       
+    
+    def est_disponible(self):
+        return self.indisponible_round == 0
+    
+    def est_indisponible(self):
+        return self.indisponible_round < 0
+
+    def decrementer_indisponibilite(self):
+        if self.indisponible_round > 0:
+            self.indisponible_round -= 1
+            
+    def RedrawAfterMissionNotAvailable(self,Board):
+        x,y = self.GetPosition()
+        Board[x][y] = self.GetSymbol()
+        
+
     def ResetValues(self):
         self.symbol = self.symbole_initial
         self.starting_workload = self.starting_workload_initial
@@ -61,8 +67,6 @@ class Mission():
     def UpgradeRemainingWorkLoad(self,amount):
         if self.remaining_workload - amount >=0:
             self.remaining_workload += amount
-        else:
-            print("BUG")
     
     def ResetRemainingWorkLoad(self):
         self.remaining_workload = 0
