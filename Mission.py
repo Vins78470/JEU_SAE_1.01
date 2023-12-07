@@ -12,14 +12,15 @@ class Mission():
         self.position = position
         self.indisponible_round = 0  # Nombre de round pendant lesquels la mission sera indisponible
         
-    # Valeurs initiales pour que quand la mission réapparaisse elle reprenne ses attributs
+    
+       # Valeurs initiales pour que quand la mission réapparaisse elle reprenne ses attributs
         self.symbole_initial = symbol
         self.starting_workload_initial = starting_workload
         self.remaining_workload_initial = starting_workload
         self.difficulty_initial = difficulty
         self.position_initial = position
 
-    # ... autres méthodes de la classe Mission ...
+ 
 
 
     def GetSymbol(self):

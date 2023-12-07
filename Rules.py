@@ -51,7 +51,7 @@ def CheckDirectionInput(potential_position,coup_possible_coder):
 # Fonction pour vérifier si une position est dans la première ligne ou colonne
 def est_dans_premiere_ligne_ou_colonne(position):
     x, y = position
-    return x == 0 or y == 0
+    return x < 0 or y < 0
 
 
 def CherchePosition(potential_position,coup_possible_coder):
@@ -232,7 +232,8 @@ def CoutDepenseArgentAuJobCenterPourEnergyMax(coder):
 
 def CoutDepenseArgentAujobCenterPourCodingLevel(coder):
     if (coder.GetMoneyAmount() - ((coder.GetCodingLevel()+1)**2)*10) >= 0:
-        return coder.UpgradeMoneyAmount(-((coder.GetCodingLevel()+1)**2)*10)
+        coder.UpgradeMoneyAmount(-((coder.GetCodingLevel()+1)**2)*10)
+        return coder.UpgradeCodingLevel()
     else:
          print(" Vous n'avez pas assez d'argent pour augmenter votre coding level. ")
          print("\n")

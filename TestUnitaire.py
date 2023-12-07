@@ -4,6 +4,8 @@ from Rules import *
 from Game import Game
 from Mission import *
 from Coder import *
+# -*- coding: utf-8 -*-
+
 
 class TestRules(unittest.TestCase):
     
@@ -23,41 +25,232 @@ class TestRules(unittest.TestCase):
     def test_check_level_choice_invalid(self):
         self.assertEqual(CheckLevelChoice("trop_facile"), False)
         self.assertEqual(CheckLevelChoice("dur"), False)
+
+
+class TestEstDansPremiereLigneOuColonne(unittest.TestCase):
+
+    def test_est_dans_premiere_ligne_ou_colonne():
+        # Cas où le joueur est sur la première ligne
+        assert est_dans_premiere_ligne_ou_colonne((0, 5)) == True
+
+        # Cas où le joueur est sur la première colonne
+        assert est_dans_premiere_ligne_ou_colonne((5, 0)) == True
+
+        # Cas où le joueur est à l'intérieur de la carte
+        assert est_dans_premiere_ligne_ou_colonne((5, 5)) == False
+
+        # Cas où le joueur est en dehors de la carte (coordonnées négatives)
+        assert est_dans_premiere_ligne_ou_colonne((5, -1)) == True
+        assert est_dans_premiere_ligne_ou_colonne((-1, 5)) == True
+
         
-# Création d'une classe pour les tests
 
-import unittest
+class TestCoderMethods(unittest.TestCase):
 
-# Ajoutez ici la fonction CheckDirectionInput
+    def setUp(self):
+        # Initialisation d'un objet Coder pour les tests
+        self.coder = Coder('C', (0, 0), 5, 10, 5, 100, 'blue')
 
+    def test_GetSymbol(self):
+        self.assertEqual(self.coder.GetSymbol(), 'C')
 
-class TestCheckDirectionInput(unittest.TestCase):
+    def test_GetPosition(self):
+        self.assertEqual(self.coder.GetPosition(), (0, 0))
 
-    def test_valid_direction(self):
-        # Test avec une direction valide
-        coup_possible_coder = ['h', 'b', 'g', 'd']
-        valid_direction = 'h'
+    def test_GetCodingLevel(self):
+        self.assertEqual(self.coder.GetCodingLevel(), 5)
 
-        result = CheckDirectionInput(valid_direction, coup_possible_coder)
+    def test_GetEnergyMax(self):
+        self.assertEqual(self.coder.GetEnergyMax(), 10)
 
-        self.assertEqual(result, True)
+    def test_GetEnergy(self):
+        self.assertEqual(self.coder.GetEnergy(), 5)
 
-    def test_invalid_direction(self):
-        # Test avec une direction invalide
-        coup_possible_coder = ['h', 'b', 'g', 'd']
-        invalid_direction = 'x'
+    def test_GetMoneyAmount(self):
+        self.assertEqual(self.coder.GetMoneyAmount(), 100)
 
-        result = CheckDirectionInput(invalid_direction, coup_possible_coder)
+    def test_ResetEnergy(self):
+        self.coder.ResetEnergy()
+        self.assertEqual(self.coder.GetEnergy(), 10)  # Vérifie si l'énergie est remise à sa valeur maximale
 
-        self.assertEqual(result, False)
+    def test_ChangePosition(self):
+        self.coder.ChangePosition((1, 1))
+        self.assertEqual(self.coder.GetPosition(), (1, 1))
 
-    # Ajoutez d'autres tests si nécessaire
+    def test_UpgradeCodingLevel(self):
+        self.coder.UpgradeCodingLevel()
+        self.assertEqual(self.coder.GetCodingLevel(), 6)
 
+    def test_UpgradeEnergyMax(self):
+        self.coder.UpgradeEnergyMax()
+        self.assertEqual(self.coder.GetEnergyMax(), 10)
+
+    def test_UpgradeMoneyAmount(self):
+        self.coder.UpgradeMoneyAmount(50)
+        self.assertEqual(self.coder.GetMoneyAmount(), 150)
     
+    def test_UpgradeEnergy(self):
+        self.coder.UpgradeEnergy(5)
+        self.assertEqual(self.coder.GetEnergy(), 10)
     
-    # Ajoutez d'autres méthodes de test pour les autres fonctionnalités de la classe Game
+    def test_UpgradeEnergy(self):
+        self.coder.UpgradeEnergy(-5)
+        self.assertEqual(self.coder.GetEnergy(), 0)        
+        
+    def test_UpgradeEnergy(self):
+        self.coder.UpgradeEnergy(3)
+        self.assertEqual(self.coder.GetEnergy(), 8)
+
+    def test_ResetEnergy(self):
+        self.coder.ResetEnergy()
+        self.assertEqual(self.coder.GetEnergy(), self.coder.GetEnergyMax())
+
+    def test_ChangePosition(self):
+        self.coder.ChangePosition((5, 5))
+        self.assertEqual(self.coder.GetPosition(), (5, 5))
+
+   
+    def test_UpgradeCodingLevel(self):
+        self.coder.UpgradeCodingLevel()
+        self.assertEqual(self.coder.GetCodingLevel(), 6)
+
+    def test_UpgradeEnergyMax(self):
+        self.coder.UpgradeEnergyMax()
+        self.assertEqual(self.coder.GetEnergyMax(), 10)
+
+    def test_UpgradeEnergy(self):
+        self.coder.UpgradeEnergy(-15)
+        self.assertEqual(self.coder.GetEnergy(), 0)
+
+    def test_UpgradeMoneyAmount(self):
+        self.coder.UpgradeMoneyAmount(-600)
+        self.assertEqual(self.coder.GetMoneyAmount(), 100)
+
+
+
+# Test pour les missions
+class TestMission(unittest.TestCase):
+    
+    def setUp(self):
+        self.mission = Mission("M1", 10, 5, (5, 5))
+
+    def test_GetSymbol(self):
+        self.assertEqual(self.mission.GetSymbol(), "M1")
+
+    def test_GetPosition(self):
+        self.assertEqual(self.mission.GetPosition(), (5, 5))
+
+    def test_GetStartingWorkLoad(self):
+        self.assertEqual(self.mission.GetStartingWorkLoad(), 10)
+
+    def test_GetRemainingWorkLoad(self):
+        self.assertEqual(self.mission.GetRemainingWorkLoad(), 10)
+
+    def test_GetDifficulty(self):
+        self.assertEqual(self.mission.GetDifficulty(), 5)
+
+    def test_RendreIndisponible(self):
+        self.mission.rendre_indisponible(3)
+        self.assertFalse(self.mission.est_disponible())
+
+    def test_EstDisponible(self):
+        self.assertTrue(self.mission.est_disponible())
+
+    def test_EstIndisponible(self):
+        self.assertFalse(self.mission.est_indisponible())
+
+    def test_DecrementerIndisponibilite(self):
+        self.mission.rendre_indisponible(3)
+        self.mission.decrementer_indisponibilite()
+        self.assertEqual(self.mission.indisponible_round, 2)
+
+    def test_RedrawAfterMissionNotAvailable(self):
+        Board = [["  " for _ in range(10)] for _ in range(10)]
+        self.mission.rendre_indisponible(3)
+        self.mission.RedrawAfterMissionNotAvailable(Board)
+        self.assertEqual(Board[5][5], "M1")
+
+    def test_ResetValues(self):
+        self.mission.rendre_indisponible(3)
+        self.mission.ResetValues()
+        self.assertEqual(self.mission.GetSymbol(), "M1")
+        self.assertEqual(self.mission.GetStartingWorkLoad(), 10)
+        self.assertEqual(self.mission.GetRemainingWorkLoad(), 10)
+        self.assertEqual(self.mission.GetDifficulty(), 5)
+        self.assertEqual(self.mission.GetPosition(), (5, 5))
+
+    def test_UpgradeRemainingWorkLoad(self):
+        self.mission.UpgradeRemainingWorkLoad(3)
+        self.assertEqual(self.mission.GetRemainingWorkLoad(), 13)
+
+    def test_ResetRemainingWorkLoad(self):
+        self.mission.ResetRemainingWorkLoad()
+        self.assertEqual(self.mission.GetRemainingWorkLoad(), 0)
+
+
+
+class TestCoderActions(unittest.TestCase):
+
+    def setUp(self):
+        # Initialisation d'un objet Coder pour les tests
+        self.coder = Coder('C', (0, 0), 3, 10, 8, 200, 'blue')
+
+    def test_CoutDepenseArgentAuJobCenterPourEnergyMax_valid(self):
+        # Assurez-vous que l'argent est suffisant pour augmenter l'énergie maximale
+        self.assertFalse(CoutDepenseArgentAuJobCenterPourEnergyMax(self.coder))
+     
+
+    def test_CoutDepenseArgentAujobCenterPourCodingLevel_valid(self):
+    
+        CoutDepenseArgentAujobCenterPourCodingLevel(self.coder)
+        self.assertEqual(self.coder.GetCodingLevel(), 4)  # Vérifie si le niveau de codage a augmenté
+        
+    def test_UpgradeCodingLevel(self):
+            # Vérifie si le niveau de codage augmente de 1
+            self.coder.UpgradeCodingLevel()
+            self.assertEqual(self.coder.GetCodingLevel(), 4)
+
+    def test_UpgradeCodingLevel_multiple_times(self):
+        # Vérifie si le niveau de codage augmente plusieurs fois
+        for i in range(5):
+            self.coder.UpgradeCodingLevel()
+        self.assertEqual(self.coder.GetCodingLevel(), 8)  # 7 + 5 = 12
+
+    def test_UpgradeCodingLevel_max_limit(self):
+        # Vérifie si le niveau de codage atteint la limite maximale
+        for i in range(20):
+            self.coder.UpgradeCodingLevel()
+        self.assertEqual(self.coder.GetCodingLevel(), 10)  # Limite maximale : 10
+
+    def test_CoutDepenseArgentAujobCenterPourCodingLevel_valid_multiple_times(self):
+        # Vérifie si le niveau de codage augmente de 1 après avoir dépensé de l'argent
+        CoutDepenseArgentAujobCenterPourCodingLevel(self.coder)
+        self.assertEqual(self.coder.GetCodingLevel(), 4)
+
+    def test_CoutDepenseArgentAujobCenterPourCodingLevel_invalid(self):
+        # Vérifie si le niveau de codage reste le même en cas d'insuffisance d'argent
+        self.coder.UpgradeMoneyAmount(-200)  # Réduit l'argent pour simuler l'insuffisance
+        CoutDepenseArgentAujobCenterPourCodingLevel(self.coder)
+        self.assertEqual(self.coder.GetCodingLevel(), 7)  # Le niveau de codage reste à 7
+
+
+    def test_CoutDepenseArgentAuJobCenterPourEnergyMax_invalid(self):
+        # Simuler le manque d'argent pour augmenter l'énergie maximale
+        self.coder.UpgradeMoneyAmount(-150)  # Abaisser le montant d'argent pour simuler le manque
+        self.assertFalse(CoutDepenseArgentAuJobCenterPourEnergyMax(self.coder))
+        self.assertEqual(self.coder.GetEnergyMax(), 10)  # Vérifie si l'énergie maximale est restée la même
+
+    def test_CoutDepenseArgentAujobCenterPourCodingLevel_invalid(self):
+        # Simuler le manque d'argent pour augmenter le niveau de codage
+        self.coder.UpgradeMoneyAmount(-160)  # Abaisser le montant d'argent pour simuler le manque
+        CoutDepenseArgentAujobCenterPourCodingLevel(self.coder)
+        self.assertEqual(self.coder.GetCodingLevel(), 3)  # Vérifie si le niveau de codage est resté le même
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
+
 
 

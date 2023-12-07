@@ -12,18 +12,7 @@ class Coder():
         self.richesse = r
         self.color = color
         self.rect = NULL
-    
-    def Draw(self, canvas, cellsize):
-       if (self.rect != NULL):
-            canvas.delete(self.rect)
-            
-       self.rect = canvas.create_rectangle(
-           self.cell[1] * cellsize,
-           self.cell[0] * cellsize,
-           (self.cell[1] + 1) * cellsize,
-           (self.cell[0] + 1) * cellsize,
-            fill=self.color
-        )
+        self.logo = NULL
     
     
     def GetSymbol(self):
@@ -68,30 +57,58 @@ class Coder():
               
     
     def UpgradeEnergy(self, energy_amount):
-        
-        if self.energy + energy_amount <= self.energy_max:
+        if self.energy + energy_amount < 0:
+             self.energy = 0 
+             
+        elif self.energy + energy_amount <= self.energy_max:
             self.energy += energy_amount
-        
-        if self.energy < 0:
+            
+        elif self.energy + energy_amount >= self.energy_max:
+            self.energy = energy_amount
+            
+        elif self.energy < 0:
             self.energy = 0
 
-        else:
-            self.energy = self.energy_max
+
+
 
     
     def UpgradeMoneyAmount(self, money_amount):
-   
-     if self.richesse < 5000 and money_amount <=0 and (self.richesse - money_amount) >= 0: #Le coder perd de l'argent et on verifie si son argent sera tjrs >=0
-          
-            self.richesse -= money_amount
-     elif self.richesse < 5000 and money_amount >= 0 : #Le coder gagne de l'argent   
-           
+        if self.richesse + money_amount < 0:
+            print("Vous ne possédez pas assez d'argent. Votre solde doit être supérieur à " + str(-money_amount) + " ฿ !")
+        elif self.richesse < 5000:
             self.richesse += money_amount
-           
-     else:
-        print(" Vous ne possédez pas assez d'argent. Votre solde doit être supérieur à " + str(money_amount) + " ฿  !")
-        
+        else:
+            print("Vous avez atteint la limite de richesse !")
 
+        
+    def Draw(self, canvas, cellsize): # Uniquement utilisé pour la partie graphique 
+           
+           if self.rect != NULL:
+                canvas.delete(self.rect)
+           
+           if self.logo != NULL:
+                canvas.delete(self.rect)
+                            
+            
+           self.rect = canvas.create_rectangle(
+               self.cell[1] * cellsize,
+               self.cell[0] * cellsize,
+               (self.cell[1] + 1) * cellsize,
+               (self.cell[0] + 1) * cellsize,
+                fill=self.color
+            )
+       
+           # Ajouter du texte au centre du coder
+           x_center = (self.cell[1] * cellsize + (self.cell[1] + 1) * cellsize) / 2
+           y_center = (self.cell[0] * cellsize + (self.cell[0] + 1) * cellsize) / 2
+
+           self.logo = canvas.create_text(
+                x_center,
+                y_center,
+                text="P",
+                fill="white"  # Couleur du texte
+            )    
     
 
 

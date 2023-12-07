@@ -16,7 +16,8 @@ class WindowForGame:
         self.NB_CELL_WIDTH = nb_cell_width
         self.NB_CELL_HEIGHT = nb_cell_height
         self.WIDTH = self.CELL_SIZE * self.NB_CELL_WIDTH
-        self.HEIGHT = self.CELL_SIZE * self.NB_CELL_HEIGHT    
+        self.HEIGHT = self.CELL_SIZE * self.NB_CELL_HEIGHT
+        self.LEN = self.WIDTH  * self.HEIGHT
         self.game = game
 
         self.window = Tk()
@@ -56,7 +57,7 @@ class WindowForGame:
         #self.mission_info_label.text = mission_info_text
         
     def afficher_infos_coder(self,liste_coder):
-        # Cr�ation de la cha�ne de texte pour les informations sur le coder
+        # Creation de la chaine de texte pour les informations sur le coder
         mission_info_text = "Infos coder(s) :\n"
         mission_info_text = AfficherInfosCoder(liste_coder)
 
@@ -67,7 +68,7 @@ class WindowForGame:
         self.coder_label.pack(side="left",anchor="n", fill='y', padx=10, pady=10)
 
         
-    # Draw initial rectangles
+    
     def draw_board(self):
         for i in range(self.NB_CELL_HEIGHT):
             for j in range(self.NB_CELL_WIDTH):
@@ -81,19 +82,29 @@ class WindowForGame:
 
 
     def draw_missions(self, liste_missions):
-        print("ca rentre")
+        
         for mission in liste_missions:
-            mission_x, mission_y = mission.GetPosition()  # Utiliser le getter pour obtenir la position de la mission
+            mission_x, mission_y = mission.GetPosition()  # Obtient la position de la mission dans la grille
+            mission_number = mission.GetSymbol()  # Récupère le numéro de la mission
+            
+       
+            # dans une l'interface graphique, les axes sont inversés, ce qui signifie que les coordonnées y de la grille deviennent les coordonnées x dans l'interface graphique, et vice versa.
+            mission_x_graphic = mission_y * self.CELL_SIZE
+            mission_y_graphic = mission_x * self.CELL_SIZE
+            
+            
 
-            mission_x *= self.CELL_SIZE
-            mission_y *= self.CELL_SIZE
-
-            x1 = mission_x
-            y1 = mission_y
-            x2 = mission_x + self.CELL_SIZE
-            y2 = mission_y + self.CELL_SIZE
+            # Dessin de la mission
+            x1 = mission_x_graphic
+            y1 = mission_y_graphic
+            x2 = mission_x_graphic + self.CELL_SIZE
+            y2 = mission_y_graphic + self.CELL_SIZE
+            
 
             self.canvas.create_rectangle(x1, y1, x2, y2, outline='black', fill='yellow')
+            self.canvas.create_text((x1 + x2) // 2, (y1 + y2) // 2, text=f"{mission_number}", fill='black')
+
+
            
     
     def move_coder(self, event):
@@ -115,7 +126,7 @@ class WindowForGame:
         if moveDirection != (0, 0):
             self.game.playOneRound(coder, moveDirection, self.round)
             self.round += 1
-        elif CheckJobCenter(self.game.Board, coder):
+        if CheckJobCenter(self.game.Board, coder):
             if keyPressed == 'a':
                 MakeChoiceAtJobCenter(coder, keyPressed)
             elif keyPressed == 'c':
@@ -124,6 +135,7 @@ class WindowForGame:
         self.draw()
 
     def draw(self):
+        
         for coder in self.game.liste_coder:
             coder.Draw(self.canvas, self.CELL_SIZE)
  
