@@ -34,11 +34,9 @@ class Game():
              random_i = random.randint(1,20)
              random_j = random.randint(1,20)
              
-            # Met a jour le fichier JSON pour que les paramètres des missions soit differents.
+            # Met a jour le fichier JSON pour que les paramètres des missions soit differents (écriture et lecture de fichier)
              self.configuration.UpdateFile()
           
-        
-             
              self.liste_missions.append(Mission(self.liste_symbole_missions[i], 
                                                 self.configuration.starting_workload, 
                                                 self.configuration.difficulty ,
@@ -59,7 +57,7 @@ class Game():
 
     def GenerateSymbolMission(self):    
         for j in range (self.nb_de_mission):
-            self.liste_symbole_missions.append("M"+str(j))
+            self.liste_symbole_missions.append("M"+str(j+1))
 
 
     def start(self):
@@ -107,7 +105,7 @@ class Game():
                         moveLetter = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
 
                     print("\n")
-                    # 
+                   
                     moveDirection = CherchePosition(moveLetter, self.letter2MoveDictionnary)
 
                     if CheckDirectionInput(moveLetter, self.letter2MoveDictionnary):
@@ -171,7 +169,7 @@ class Game():
             for mission in self.liste_missions:
                 if mission.est_disponible() == False:
                     mission.decrementer_indisponibilite()
-                    mission.ResetValues()
+                    #mission.ResetValues()
                 if mission.est_disponible():   
                         mission.RedrawAfterMissionNotAvailable(self.Board)
 
@@ -181,4 +179,4 @@ class Game():
             print("Vous etes bien sur le Job Center")
             print("\n")
 
-        MakeChoiceAtJobCenter(coder, AskChoiceAtJobCenter())
+        #MakeChoiceAtJobCenter(coder, AskChoiceAtJobCenter())

@@ -1,3 +1,4 @@
+from re import A
 from tkinter import *
 from Coder import *
 from Mission import *
@@ -27,20 +28,39 @@ class WindowForGame:
         self.canvas.pack()
 
 
-        self.draw_board()  # Appel � la m�thode draw_board() pour dessiner la grille d�s la cr�ation de la fen�tre
-    
+        self.draw_board()  # Appel de la methode draw_board() pour dessiner la grille d�s la creation de la fenetre
+        
+
         
         self.canvas.bind_all('<KeyPress>', self.move_coder)
 
         self.missions_label = Label(self.window, text="")
         self.coder_label = Label(self.window, text="")
         
-        # Placer le texte "JC" au milieu � la position (10, 10)
+        # Place le texte "JC" au milieu de la position (10, 10)
         self.canvas.create_text(10 * self.CELL_SIZE + self.CELL_SIZE // 2,
                                 10 * self.CELL_SIZE + self.CELL_SIZE // 2,
                                 text="JC",
                                 font=("Arial", 20),  # Exemple de police et de taille de texte
                                 fill="black")  # Couleur du texte (ici noir)
+
+        
+        for i in range (self.HEIGHT):
+            self.canvas.create_text(0 * self.CELL_SIZE + self.CELL_SIZE // 2,
+                                i * self.CELL_SIZE + self.CELL_SIZE // 2,
+                                text="X",
+                                font=("Arial", 20),  # Exemple de police et de taille de texte
+                                fill="black")  # Couleur du texte (ici noir)
+
+        for i in range(self.NB_CELL_WIDTH):
+            self.canvas.create_text(i * self.CELL_SIZE + self.CELL_SIZE // 2,
+                            0 * self.CELL_SIZE + self.CELL_SIZE // 2,
+                            text="X",
+                            font=("Arial", 20),
+                            fill="black")
+
+
+        
         
         self.round = 0
         
@@ -70,7 +90,7 @@ class WindowForGame:
         
     
     def draw_board(self):
-        for i in range(self.NB_CELL_HEIGHT):
+        for i in range(self.NB_CELL_HEIGHT ):
             for j in range(self.NB_CELL_WIDTH):
                 x1 = i * self.CELL_SIZE
                 y1 = j * self.CELL_SIZE
@@ -104,7 +124,17 @@ class WindowForGame:
             self.canvas.create_rectangle(x1, y1, x2, y2, outline='black', fill='yellow')
             self.canvas.create_text((x1 + x2) // 2, (y1 + y2) // 2, text=f"{mission_number}", fill='black')
 
+    def ameliorer_energie_max(self,coder):
 
+        if CoutDepenseArgentAuJobCenterPourEnergyMax(coder):
+            coder.UpgradeEnergyMax()
+            print("Bien Améliorer l'énergie maximale")
+
+    def ameliorer_niveau_codage(self,coder):
+
+         if CoutDepenseArgentAujobCenterPourCodingLevel(coder):
+            coder.UpgradeCodingLevel()
+            print("Bien Améliorer le niveau de codage")
            
     
     def move_coder(self, event):
@@ -126,13 +156,26 @@ class WindowForGame:
         if moveDirection != (0, 0):
             self.game.playOneRound(coder, moveDirection, self.round)
             self.round += 1
+        
+        if hasattr(self, "btn_energie_max"):
+            self.btn_energie_max.destroy()  # Supprime le bouton s'il existe déjà
+        if hasattr(self, "btn_niveau_codage"):
+            self.btn_niveau_codage.destroy()  # Supprime le bouton s'il existe déjà
+
+
         if CheckJobCenter(self.game.Board, coder):
-            if keyPressed == 'a':
-                MakeChoiceAtJobCenter(coder, keyPressed)
-            elif keyPressed == 'c':
-                MakeChoiceAtJobCenter(coder, keyPressed)
+
+            self.btn_energie_max = Button(self.window, text="Améliorer l'énergie max", command=lambda: self.ameliorer_energie_max(coder))
+            self.btn_energie_max.pack()
+
+            self.btn_niveau_codage = Button(self.window, text="Améliorer le niveau de codage", command=lambda: self.ameliorer_niveau_codage(coder))
+            self.btn_niveau_codage.pack()
+            coder.ResetEnergy()
+
                 
         self.draw()
+
+    
 
     def draw(self):
         

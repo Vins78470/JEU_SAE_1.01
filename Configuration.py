@@ -10,8 +10,9 @@ class Configuration:
         self.level = level
         self.json_file = f'{level}_missions.json'
         self.liste_data_mission = []
+
         self.UpdateFile()
-        self.ReadFromFile()
+        self.ReadFromFile() # On lit les données qui viennent d'être écrites dans le fichier json.
         
     def UpdateFile(self):
         if self.level == "facile":
@@ -29,7 +30,7 @@ class Configuration:
             self.difficulty = random.randint(8, 12)
           
         
-        self.WriteToFile()
+        self.WriteToFile() # Ecriture des fichiers en fonction du choix de niveau
         
     def WriteToFile(self):
         mission_data = {
@@ -47,4 +48,4 @@ class Configuration:
                 self.starting_workload = data["starting_workload"]
                 self.difficulty = data["difficulty"]
         except FileNotFoundError:
-            pass  # File not found, will create new data in UpdateFile()
+            pass 

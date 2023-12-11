@@ -47,11 +47,13 @@ def CheckDirectionInput(potential_position,coup_possible_coder):
     else:
         #print(" Il faut choisir entre les touches haut (h), bas (b), gauche (g), droite (d) : ")
         return False
-        
-# Fonction pour vérifier si une position est dans la première ligne ou colonne
+
 def est_dans_premiere_ligne_ou_colonne(position):
     x, y = position
-    return x < 0 or y < 0
+    return (x == 0 or y == 0)
+
+
+
 
 
 def CherchePosition(potential_position,coup_possible_coder):
@@ -80,7 +82,7 @@ def IsMovable(potential_position,coder,liste_coder):
     if est_dans_premiere_ligne_ou_colonne(potential_next_position):
         return False
     # Vérification si la prochaine position est dans les limites de la grille
-    if 1 <= potential_next_position[0] <= 20 and 1 <= potential_next_position[1] <= 20:
+    if 1 <= potential_next_position[0] <= 21 and 1 <= potential_next_position[1] <= 21:
         # Insérez ici d'autres conditions spécifiques à votre jeu si nécessaire
         return True  # La prochaine position est valide
     else:
@@ -261,7 +263,8 @@ def DepenseRwMission(coder,liste_missions):
 def IsFinishMission(coder, liste_missions):
     mission = FindMissionAssociatedToCoder(liste_missions, coder)
     if mission.GetRemainingWorkLoad() == 0:
-        return True
+       mission.ResetValues()
+       return True
 
 
 
@@ -294,6 +297,7 @@ def CheckJobCenter(Board,coder):
 
 
 def AskChoiceAtJobCenter():
+
     print("\n")
     decisionLetter = input(" Augmentez son énergie max('a') ou augmenter votre coding level de 1 ('c') ou ne faites rien (choisir une direction): ")
     print("\n")
@@ -301,14 +305,15 @@ def AskChoiceAtJobCenter():
     return decisionLetter
 
 def MakeChoiceAtJobCenter(coder, decisionLetter):
-    
+    coder.ResetEnergy() # On reset l'energie dans tout les cas
+
     if decisionLetter == 'a':
         if CoutDepenseArgentAuJobCenterPourEnergyMax(coder):
-            return coder.UpgradeEnergyMax()
+            coder.UpgradeEnergyMax()
+
     elif decisionLetter == 'c':
         CoutDepenseArgentAujobCenterPourCodingLevel(coder)
         return coder.UpgradeCodingLevel()
-    
-    coder.ResetEnergy()
+
 
 

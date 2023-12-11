@@ -106,7 +106,7 @@ class Coder():
            self.logo = canvas.create_text(
                 x_center,
                 y_center,
-                text="P",
+                text=self.symbole,
                 fill="white"  # Couleur du texte
             )    
     

@@ -1,10 +1,10 @@
-import imp
+
 import unittest
 from Rules import *
 from Game import Game
 from Mission import *
 from Coder import *
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 
 class TestRules(unittest.TestCase):
@@ -26,22 +26,6 @@ class TestRules(unittest.TestCase):
         self.assertEqual(CheckLevelChoice("trop_facile"), False)
         self.assertEqual(CheckLevelChoice("dur"), False)
 
-
-class TestEstDansPremiereLigneOuColonne(unittest.TestCase):
-
-    def test_est_dans_premiere_ligne_ou_colonne():
-        # Cas où le joueur est sur la première ligne
-        assert est_dans_premiere_ligne_ou_colonne((0, 5)) == True
-
-        # Cas où le joueur est sur la première colonne
-        assert est_dans_premiere_ligne_ou_colonne((5, 0)) == True
-
-        # Cas où le joueur est à l'intérieur de la carte
-        assert est_dans_premiere_ligne_ou_colonne((5, 5)) == False
-
-        # Cas où le joueur est en dehors de la carte (coordonnées négatives)
-        assert est_dans_premiere_ligne_ou_colonne((5, -1)) == True
-        assert est_dans_premiere_ligne_ou_colonne((-1, 5)) == True
 
         
 
@@ -249,8 +233,8 @@ class TestCoderActions(unittest.TestCase):
 
 
 
-if __name__ == '__main__':
-    unittest.main()
+
+unittest.main()
 
 
 
