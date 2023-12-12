@@ -55,7 +55,7 @@ class TestCoderMethods(unittest.TestCase):
 
     def test_ResetEnergy(self):
         self.coder.ResetEnergy()
-        self.assertEqual(self.coder.GetEnergy(), 10)  # Vérifie si l'énergie est remise à sa valeur maximale
+        self.assertEqual(self.coder.GetEnergy(), 10)  # Vï¿½rifie si l'ï¿½nergie est remise ï¿½ sa valeur maximale
 
     def test_ChangePosition(self):
         self.coder.ChangePosition((1, 1))
@@ -180,55 +180,55 @@ class TestCoderActions(unittest.TestCase):
         self.coder = Coder('C', (0, 0), 3, 10, 8, 200, 'blue')
 
     def test_CoutDepenseArgentAuJobCenterPourEnergyMax_valid(self):
-        # Assurez-vous que l'argent est suffisant pour augmenter l'énergie maximale
+        # Assurez-vous que l'argent est suffisant pour augmenter l'ï¿½nergie maximale
         self.assertFalse(CoutDepenseArgentAuJobCenterPourEnergyMax(self.coder))
      
 
     def test_CoutDepenseArgentAujobCenterPourCodingLevel_valid(self):
     
         CoutDepenseArgentAujobCenterPourCodingLevel(self.coder)
-        self.assertEqual(self.coder.GetCodingLevel(), 4)  # Vérifie si le niveau de codage a augmenté
+        self.assertEqual(self.coder.GetCodingLevel(), 4)  # Vï¿½rifie si le niveau de codage a augmentï¿½
         
     def test_UpgradeCodingLevel(self):
-            # Vérifie si le niveau de codage augmente de 1
+            # Vï¿½rifie si le niveau de codage augmente de 1
             self.coder.UpgradeCodingLevel()
             self.assertEqual(self.coder.GetCodingLevel(), 4)
 
     def test_UpgradeCodingLevel_multiple_times(self):
-        # Vérifie si le niveau de codage augmente plusieurs fois
+        # Vï¿½rifie si le niveau de codage augmente plusieurs fois
         for i in range(5):
             self.coder.UpgradeCodingLevel()
         self.assertEqual(self.coder.GetCodingLevel(), 8)  # 7 + 5 = 12
 
     def test_UpgradeCodingLevel_max_limit(self):
-        # Vérifie si le niveau de codage atteint la limite maximale
+        # Vï¿½rifie si le niveau de codage atteint la limite maximale
         for i in range(20):
             self.coder.UpgradeCodingLevel()
         self.assertEqual(self.coder.GetCodingLevel(), 10)  # Limite maximale : 10
 
     def test_CoutDepenseArgentAujobCenterPourCodingLevel_valid_multiple_times(self):
-        # Vérifie si le niveau de codage augmente de 1 après avoir dépensé de l'argent
+        # Vï¿½rifie si le niveau de codage augmente de 1 aprï¿½s avoir dï¿½pensï¿½ de l'argent
         CoutDepenseArgentAujobCenterPourCodingLevel(self.coder)
         self.assertEqual(self.coder.GetCodingLevel(), 4)
 
     def test_CoutDepenseArgentAujobCenterPourCodingLevel_invalid(self):
-        # Vérifie si le niveau de codage reste le même en cas d'insuffisance d'argent
-        self.coder.UpgradeMoneyAmount(-200)  # Réduit l'argent pour simuler l'insuffisance
+        # Vï¿½rifie si le niveau de codage reste le mï¿½me en cas d'insuffisance d'argent
+        self.coder.UpgradeMoneyAmount(-200)  # Rï¿½duit l'argent pour simuler l'insuffisance
         CoutDepenseArgentAujobCenterPourCodingLevel(self.coder)
-        self.assertEqual(self.coder.GetCodingLevel(), 7)  # Le niveau de codage reste à 7
+        self.assertEqual(self.coder.GetCodingLevel(), 7)  # Le niveau de codage reste ï¿½ 7
 
 
     def test_CoutDepenseArgentAuJobCenterPourEnergyMax_invalid(self):
-        # Simuler le manque d'argent pour augmenter l'énergie maximale
+        # Simuler le manque d'argent pour augmenter l'ï¿½nergie maximale
         self.coder.UpgradeMoneyAmount(-150)  # Abaisser le montant d'argent pour simuler le manque
         self.assertFalse(CoutDepenseArgentAuJobCenterPourEnergyMax(self.coder))
-        self.assertEqual(self.coder.GetEnergyMax(), 10)  # Vérifie si l'énergie maximale est restée la même
+        self.assertEqual(self.coder.GetEnergyMax(), 10)  # Vï¿½rifie si l'ï¿½nergie maximale est restï¿½e la mï¿½me
 
     def test_CoutDepenseArgentAujobCenterPourCodingLevel_invalid(self):
         # Simuler le manque d'argent pour augmenter le niveau de codage
         self.coder.UpgradeMoneyAmount(-160)  # Abaisser le montant d'argent pour simuler le manque
         CoutDepenseArgentAujobCenterPourCodingLevel(self.coder)
-        self.assertEqual(self.coder.GetCodingLevel(), 3)  # Vérifie si le niveau de codage est resté le même
+        self.assertEqual(self.coder.GetCodingLevel(), 3)  # Verifie si le niveau de codage est restï¿½ le mï¿½me
 
 
 

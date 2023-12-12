@@ -88,7 +88,7 @@ class Coder():
                 canvas.delete(self.rect)
            
            if self.logo != NULL:
-                canvas.delete(self.rect)
+                canvas.delete(self.logo)
                             
             
            self.rect = canvas.create_rectangle(

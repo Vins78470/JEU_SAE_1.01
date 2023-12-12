@@ -1,4 +1,4 @@
-from re import A
+
 from tkinter import *
 from Coder import *
 from Mission import *
@@ -45,22 +45,7 @@ class WindowForGame:
                                 fill="black")  # Couleur du texte (ici noir)
 
         
-        for i in range (self.HEIGHT):
-            self.canvas.create_text(0 * self.CELL_SIZE + self.CELL_SIZE // 2,
-                                i * self.CELL_SIZE + self.CELL_SIZE // 2,
-                                text="X",
-                                font=("Arial", 20),  # Exemple de police et de taille de texte
-                                fill="black")  # Couleur du texte (ici noir)
-
-        for i in range(self.NB_CELL_WIDTH):
-            self.canvas.create_text(i * self.CELL_SIZE + self.CELL_SIZE // 2,
-                            0 * self.CELL_SIZE + self.CELL_SIZE // 2,
-                            text="X",
-                            font=("Arial", 20),
-                            fill="black")
-
-
-        
+     
         
         self.round = 0
         
@@ -75,6 +60,8 @@ class WindowForGame:
         #mission_info_label = Label(self.window, text=mission_info_text)
         self.missions_label.pack(side="right",anchor="n", padx=10, pady=10)
         #self.mission_info_label.text = mission_info_text
+
+
         
     def afficher_infos_coder(self,liste_coder):
         # Creation de la chaine de texte pour les informations sur le coder
@@ -87,18 +74,31 @@ class WindowForGame:
         # Cr�ation du label avec les informations des missions
         self.coder_label.pack(side="left",anchor="n", fill='y', padx=10, pady=10)
 
-        
     
     def draw_board(self):
+        alphabet = list(string.ascii_uppercase[:22])
         for i in range(self.NB_CELL_HEIGHT ):
-            for j in range(self.NB_CELL_WIDTH):
+            for j in range(self.NB_CELL_WIDTH ):
                 x1 = i * self.CELL_SIZE
                 y1 = j * self.CELL_SIZE
                 x2 = x1 + self.CELL_SIZE
                 y2 = y1 + self.CELL_SIZE
                 self.canvas.create_rectangle(x1, y1, x2, y2, outline='black', fill='white')
-        
+                if j == 0:
+                    self.canvas.create_text((i)* self.CELL_SIZE + self.CELL_SIZE // 2,
+                        (j)* self.CELL_SIZE + self.CELL_SIZE // 2,
+                        text = alphabet[i],
+                        font=("Arial", 20),  # Exemple de police et de taille de texte
+                        fill="black")  # Couleur du texte (ici noir)
+                if i == 0:
+                    self.canvas.create_text((i)* self.CELL_SIZE + self.CELL_SIZE // 2,
+                    (j)* self.CELL_SIZE + self.CELL_SIZE // 2,
+                    text = j,
+                    font=("Arial", 20),  # Exemple de police et de taille de texte
+                    fill="black")  # Couleur du texte (ici noir)
 
+                
+   
 
 
     def draw_missions(self, liste_missions):

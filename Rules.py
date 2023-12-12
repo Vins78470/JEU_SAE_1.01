@@ -4,6 +4,17 @@ from Mission import *
 import string
 
 def InitBoard(Board):
+
+    """
+    Initialise et retourne un plateau de jeu avec des coordonnées initiales.
+    
+    Args:
+    - Board: tableau représentant le plateau de jeu
+    
+    Returns:
+    - Board: plateau de jeu initialisé
+    """
+
     print("")
     print("------- Niveau 0 ------- : ")  
     print("")
@@ -20,8 +31,18 @@ def InitBoard(Board):
         
     Board[10][10] = "JC" #Initalise le job center
     return Board
+
+
  
 def PrintBoard(Board):
+
+    """
+    Affiche le plateau de jeu avec un alignement des symboles à droite.
+
+    Args:
+    - Board: tableau représentant le plateau de jeu
+    """
+
     max_length = max(len(symbol) for row in Board for symbol in row)  # Longueur maximale des symboles
     for i in range(len(Board)):
         row = " | ".join(symbol.rjust(max_length) for symbol in Board[i])  # Alignement des symboles à droite
@@ -30,6 +51,16 @@ def PrintBoard(Board):
 
 
 def CheckNombreCoder(nb_coder):
+    """
+    Vérifie si le nombre de "coders" est valide (entre 1 et 4).
+    
+    Args:
+    - nb_coder: nombre de "coders" choisi
+    
+    Returns:
+    - bool: True si le nombre est valide, False sinon
+    """
+
     if 1 <= nb_coder <= 4:
         return True
     else:
@@ -38,17 +69,54 @@ def CheckNombreCoder(nb_coder):
 
 
 def CheckLevelChoice(difficultyChoice):
+    
+    """
+    Vérifie si le choix de difficulté donné est valide.
+
+    Args:
+    - difficultyChoice: chaîne représentant le choix de difficulté
+
+    Returns:
+    - bool: True si la difficulté est valide, False sinon
+    """
+
     valid_difficulties = ["facile", "intermediaire", "difficile"]
     return difficultyChoice in valid_difficulties
 
+
+
 def CheckDirectionInput(potential_position,coup_possible_coder):
+
+    """
+    Vérifie si la position potentielle correspond à une direction valide pour le joueur.
+
+    Args:
+    - potential_position: tuple représentant la position potentielle
+    - coup_possible_coder: dictionnaire des coups possibles pour le joueur
+
+    Returns:
+    - bool: True si la position potentielle est une direction valide, False sinon
+    """
+
     if potential_position in coup_possible_coder:
         return True
     else:
-        #print(" Il faut choisir entre les touches haut (h), bas (b), gauche (g), droite (d) : ")
         return False
+    
+
 
 def est_dans_premiere_ligne_ou_colonne(position):
+    
+    """
+    Vérifie si une position donnée se situe sur la première ligne ou la première colonne d'une grille.
+
+    Args:
+    - position: tuple représentant les coordonnées (x, y) de la position
+
+    Returns:
+    - bool: True si la position est sur la première ligne ou colonne, False sinon
+    """
+
     x, y = position
     return (x == 0 or y == 0)
 
@@ -57,18 +125,56 @@ def est_dans_premiere_ligne_ou_colonne(position):
 
 
 def CherchePosition(potential_position,coup_possible_coder):
+   
+   """
+    Cherche et retourne une valeur associée à une position dans un dictionnaire de coups possibles.
+
+    Args:
+    - potential_position: tuple représentant la position recherchée
+    - coup_possible_coder: dictionnaire des coups possibles avec les positions comme clés
+
+    Returns:
+    - valeur: la valeur associée à la position recherchée, si elle existe, sinon None
+    """
+   
    for cle, valeur in coup_possible_coder.items():
        if cle == potential_position:
             return valeur 
 
 
 def IsCaseEmpty(position, liste_coder):
+
+    """
+    Vérifie si une case spécifique sur le plateau de jeu est vide.
+
+    Args:
+    - position: tuple représentant les coordonnées de la case à vérifier
+    - liste_coder: liste des objets "coder" actuellement sur le plateau
+
+    Returns:
+    - bool: True si la case est vide, False si elle est occupée par un "coder"
+    """
+    
     for coder in liste_coder:
         if coder.GetPosition() == position:
             return False  # La case n'est pas vide, elle est occupée par un coder
     return True  # Aucun coder n'occupe cette case, elle est vide
 
+
+
 def IsMovable(potential_position,coder,liste_coder):
+    
+    """
+    Vérifie si un "coder" peut se déplacer vers une position potentielle sur la grille du jeu.
+
+    Args:
+    - potential_position: tuple représentant la position potentielle de déplacement
+    - coder: objet "coder" pour lequel le déplacement est vérifié
+    - liste_coder: liste des "coders" actuellement sur le plateau
+
+    Returns:
+    - bool: True si le déplacement est possible, False sinon
+    """
   
     potential_next_position = (coder.GetPosition()[0] + potential_position[0], coder.GetPosition()[1] + potential_position[1])
 
@@ -91,11 +197,35 @@ def IsMovable(potential_position,coder,liste_coder):
 
 def DrawPlayer(Board, coder):
 
+    """
+    Met à jour le plateau de jeu en plaçant le symbole représentant un "coder" à une position spécifique.
+
+    Args:
+    - Board: tableau représentant le plateau de jeu
+    - coder: objet "coder" à placer sur le plateau
+
+    Modifie:
+    - Board: met à jour le plateau en plaçant le symbole du "coder" à sa position actuelle
+    """
+
     # Utilisation de nouvelles_positions[0] et nouvelles_positions[1] pour accéder aux indices x et y
     Board[coder.cell[0]][coder.cell[1]] = coder.GetSymbol()
 
     
 def DeletePlayer(Board, coder):
+
+    """
+    Supprime un 'coder' du plateau de jeu en remplaçant son symbole par une chaîne vide à sa position spécifique.
+    Met également à jour le statut du Job Center sur le plateau.
+
+    Args:
+    - Board: tableau représentant le plateau de jeu
+    - coder: objet 'coder' à supprimer du plateau
+
+    Modifie:
+    - Board: met à jour le plateau en supprimant le symbole du 'coder' à sa position actuelle
+    """
+
     x, y = coder.GetPosition()
     symbol = coder.GetSymbol()
 
@@ -106,6 +236,18 @@ def DeletePlayer(Board, coder):
 
 
 def DrawPlayerAtJobCenter(Board, liste_coder):
+
+    """
+    Met à jour le plateau de jeu en plaçant les symboles concaténés de tous les 'coders' à la position du Job Center.
+
+    Args:
+    - Board: tableau représentant le plateau de jeu
+    - liste_coder: liste des objets 'coder' présents sur le plateau
+
+    Returns:
+    - Board: plateau de jeu mis à jour avec les symboles des 'coders' au Job Center
+    """
+
     symbols = ''
     for coder in liste_coder:
         symbols += coder.GetSymbol()  # Concatène les symboles des coders
@@ -116,6 +258,18 @@ def DrawPlayerAtJobCenter(Board, liste_coder):
 
 
 def UpdateJobCenter(Board, liste_coder):
+
+    """
+    Met à jour l'état du Job Center sur le plateau de jeu en fonction de la présence d'un 'coder' à une position spécifique.
+
+    Args:
+    - Board: tableau représentant le plateau de jeu
+    - liste_coder: liste des objets 'coder' présents sur le plateau
+
+    Modifie:
+    - Board: met à jour la case du Job Center si aucun 'coder' n'est présent à sa position
+    """
+    
     center_position = (10, 10)  # Position du centre
 
     # Vérifie s'il y a un coder sur la case du centre
