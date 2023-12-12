@@ -1,12 +1,11 @@
+# -*- coding: utf-8 -*-
 from Rules import *
 from Coder import *
 from Mission import *
 from PartieGraphique import *
 from Game import *
-
-
-
 # -*- coding: utf-8 -*-
+
 
 mode = 0 #console
 mode = 1 #window
@@ -44,12 +43,32 @@ else:
 
 
 def Play(game, mode):
-        game.start()
-        if (mode == 0):
-            game.play()
-        elif (mode == 1): 
-            windowForGame = WindowForGame(game, cell_size=30, nb_cell_width=22, nb_cell_height=22)
-            windowForGame.draw()
-            windowForGame.window.mainloop()
+    
+    """
+    G�re le déroulement du jeu en fonction du mode sp�cifi�.
 
-Play(game, 1)
+    Arguments :
+    game : Game
+        L'instance du jeu a demarrer et et jouer.
+    mode : int
+        Le mode de jeu a executer (0 pour jouer dans la console, 1 pour jouer dans une fenetre graphique).
+
+    Returns :
+    None
+        La fonction gere le demarrage et le deroulement du jeu selon le mode selectionne.
+        Si le mode est 0, le jeu est joue dans la console.
+        Si le mode est 1, le jeu est affiche dans une fenetre graphique.
+    """    
+        
+    game.start()
+    if (mode == 0):
+        game.play()
+    elif (mode == 1): 
+        windowForGame = WindowForGame(game, cell_size=30, nb_cell_width=22, nb_cell_height=22)
+        windowForGame.draw()
+        windowForGame.window.mainloop()
+
+
+Play(game, 1) # Pour jouer en mode fenetre graphique.
+
+#Play(game, 0) -> Pour jouer en mode console.

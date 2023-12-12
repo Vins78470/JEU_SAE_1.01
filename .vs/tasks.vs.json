@@ -5,6 +5,11 @@
       "taskLabel": "t\u00E2che-PartieGraphique",
       "appliesTo": "PartieGraphique.py",
       "type": "launch"
+    },
+    {
+      "taskLabel": "t\u00E2che-Game",
+      "appliesTo": "Game.py",
+      "type": "launch"
     }
   ]
 }

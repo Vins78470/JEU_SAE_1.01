@@ -2,6 +2,8 @@ import random
 from Coder import *
 from Mission import *
 import string
+# -*- coding: utf-8 -*-
+
 
 def InitBoard(Board):
 
@@ -209,6 +211,7 @@ def DrawPlayer(Board, coder):
     """
 
     # Utilisation de nouvelles_positions[0] et nouvelles_positions[1] pour accéder aux indices x et y
+
     Board[coder.cell[0]][coder.cell[1]] = coder.GetSymbol()
 
     
@@ -283,6 +286,17 @@ def UpdateJobCenter(Board, liste_coder):
 # Dessine la mission sur la Board
 
 def DrawMissions(Board,liste_missions):
+    
+    """
+    Met à jour le tableau `Board` avec les symboles des missions à leurs positions respectives.
+
+    Args:
+    - Board (list): Le tableau représentant le plateau de jeu.
+    - liste_missions (list): La liste des objets de mission à placer sur le plateau.
+
+    Returns:
+    - list: Le tableau `Board` mis à jour avec les symboles des missions aux positions correspondantes.
+    """
 
     for mission in liste_missions:
         mission_pos = mission.GetPosition()
@@ -290,9 +304,23 @@ def DrawMissions(Board,liste_missions):
     
     return Board
         
+
+
+
 # Quand le coder passe sur une mission, si elle n'est pas fini on la redessine 
 
 def ReDrawMission(Board,liste_missions,coder):
+    """
+    Redessine la mission associée au codeur sur le plateau s'il n'a pas encore été terminé.
+
+    Args:
+    - Board (list): Le tableau représentant le plateau de jeu.
+    - liste_missions (list): La liste des objets de mission présents sur le plateau.
+    - coder (Coder): L'objet représentant le codeur associé à une mission.
+
+    Returns:
+    - None
+    """
     mission = FindMissionAssociatedToCoder(liste_missions,coder)
     x,y = mission.GetPosition()
     Board[x][y] = mission.GetSymbol()
@@ -303,7 +331,18 @@ def ReDrawMission(Board,liste_missions,coder):
 
 
 # Affiche les infos des coders
+
 def AfficherInfosCoder(liste_coder):
+    
+    """
+    Affiche les informations détaillées de chaque codeur de la liste.
+
+    Args:
+    - liste_coder (list): Liste des objets représentant les codeurs.
+
+    Returns:
+    - str: Texte contenant les informations détaillées de chaque codeur.
+    """
     coder_info_text = ""
     for i, coder in enumerate(liste_coder, 1):
         coder_info_text += f"Coder {i} :\n"
@@ -320,6 +359,17 @@ def AfficherInfosCoder(liste_coder):
 
 
 def DeleteMission(liste_missions, coder):
+    """
+    Supprime la mission associée à un codeur de la liste des missions.
+
+    Args:
+    - liste_missions (list): Liste des missions à gérer.
+    - coder (object): Codeur dont la mission associée doit être supprimée.
+
+    Returns:
+    - object: La mission supprimée de la liste.
+    """    
+
     mission = FindMissionAssociatedToCoder(liste_missions, coder)
     tmp_mission = mission
     liste_missions.remove(mission)
@@ -330,6 +380,16 @@ def DeleteMission(liste_missions, coder):
 # Affiche les infos des missions
 
 def AfficherInfosMissions(liste_missions):
+    
+    """
+    Affiche les informations sur les missions de la liste.
+
+    Args:
+    - liste_missions (list): Liste des missions à afficher.
+
+    Returns:
+    - str: Texte contenant les détails des missions présentes dans la liste.
+    """
     mission_info_text = ""
     for i, mission in enumerate(liste_missions, 1):
         mission_info_text += (
@@ -345,6 +405,17 @@ def AfficherInfosMissions(liste_missions):
 
 
 def IsCoderOnaMission(coder, list_missions):
+    
+    """
+    Vérifie si un coder est actuellement sur une mission.
+
+    Args:
+    - coder (Coder): Le coder dont la position doit être vérifiée.
+    - list_missions (list): La liste des missions à vérifier.
+
+    Returns:
+    - bool: True si le coder est sur une mission, False sinon.
+    """
     coder_position = coder.GetPosition()
     for mission in list_missions:
         mission_position = mission.GetPosition()
@@ -355,17 +426,35 @@ def IsCoderOnaMission(coder, list_missions):
 
 
 
-""" Lorsqu'un coder, à la fin de son round, dispose de 5000฿, alors le match se termine"""
-
 def GameIsOver(coder):
+    """
+    Vérifie si le match est terminé en fonction de la quantité d'argent accumulée par le coder.
+
+    Args:
+    - coder (Coder): Le coder à évaluer pour savoir si le match est terminé.
+
+    Returns:
+    - bool: True si le montant d'argent du coder atteint ou dépasse 5000฿, sinon False.
+    """
     if coder.GetMoneyAmount() >= 5000:
-       return True
+        return True
     else:
-       return False
+        return False
 
 
 
 def FindMissionAssociatedToCoder(liste_missions,coder):
+    """
+    Trouve la mission associée à un coder en comparant leurs positions.
+
+    Args:
+    - liste_missions (list): Liste des missions existantes.
+    - coder (Coder): Le coder pour lequel on cherche la mission associée.
+
+    Returns:
+    - Mission: La mission associée au coder s'ils partagent la même position, sinon None.
+    """    
+
     for mission in liste_missions:
         if coder.GetPosition() == mission.GetPosition():
             return mission
@@ -376,6 +465,17 @@ def FindMissionAssociatedToCoder(liste_missions,coder):
 possibles seulement si le coder dispose de l'argent nécessaire."""
 
 def CoutDepenseArgentAuJobCenterPourEnergyMax(coder):
+    
+    """
+    Calcule le coût en dollar pour augmenter l'énergie maximale du coder au Job Center.
+
+    Args:
+    - coder (Coder): Le coder pour lequel on veut augmenter l'énergie maximale.
+
+    Returns:
+    - bool: True si le coder a assez d'argent pour augmenter son énergie maximale, False sinon.
+    """
+    
     if (coder.GetMoneyAmount() - ((coder.GetEnergyMax()+1)**2)*10) >= 0:
         coder.UpgradeMoneyAmount(-((coder.GetEnergyMax()+1)**2)*10)
         return True
@@ -387,17 +487,43 @@ def CoutDepenseArgentAuJobCenterPourEnergyMax(coder):
 
 
 def CoutDepenseArgentAujobCenterPourCodingLevel(coder):
-    if (coder.GetMoneyAmount() - ((coder.GetCodingLevel()+1)**2)*10) >= 0:
-        coder.UpgradeMoneyAmount(-((coder.GetCodingLevel()+1)**2)*10)
+    
+    """
+    Calcule le coût en dollars pour augmenter le niveau de codage du coder au Job Center.
+
+    Args:
+    - coder (Coder): Le coder pour lequel on veut augmenter le niveau de codage.
+
+    Returns:
+    - bool ou None: Si le coder a assez d'argent pour augmenter son niveau de codage,
+      cela met à jour le niveau de codage et retourne True. Sinon, affiche un message
+      et retourne None.
+    """
+    cost = ((coder.GetCodingLevel() + 1) ** 2) * 10
+    if (coder.GetMoneyAmount() - cost) >= 0:
+        coder.UpgradeMoneyAmount(-cost)
         return coder.UpgradeCodingLevel()
     else:
-         print(" Vous n'avez pas assez d'argent pour augmenter votre coding level. ")
-         print("\n")
+        print(" Vous n'avez pas assez d'argent pour augmenter votre coding level. ")
+        print("\n")
+        return None
 
         
 """le coder perd un nombre de points d'energie égal à la difficulté de la mission"""
 
 def DepenseCoderEnergyPourLaMission(coder,liste_missions):
+    
+    """
+    Réduit l'énergie du coder en fonction de la difficulté de la mission.
+
+    Args:
+    - coder (Coder): Le coder effectuant la mission.
+    - liste_missions (list[Mission]): La liste des missions disponibles.
+
+    Returns:
+    - int: La nouvelle valeur de l'énergie du coder après la dépense pour la mission.
+    """
+    
     mission = FindMissionAssociatedToCoder(liste_missions,coder)
     return coder.UpgradeEnergy(-(mission.GetDifficulty()))
     
@@ -406,6 +532,17 @@ def DepenseCoderEnergyPourLaMission(coder,liste_missions):
 """le RW de la mission diminue du CL du coder"""
 
 def DepenseRwMission(coder,liste_missions):
+    
+    """
+    Réduit la charge de travail restante d'une mission en fonction du niveau de codage du coder.
+
+    Args:
+    - coder (Coder): Le coder effectuant la mission.
+    - liste_missions (list[Mission]): La liste des missions disponibles.
+
+    Returns:
+    - int: La nouvelle valeur de la charge de travail restante de la mission après la dépense par le coder.
+    """
     mission = FindMissionAssociatedToCoder(liste_missions,coder)
     return mission.UpgradeRemainingWorkLoad(-(coder.GetCodingLevel()))
     
@@ -415,6 +552,18 @@ def DepenseRwMission(coder,liste_missions):
 """Si en avançant une mission le coder amène la RW à 0 (ou moins), la mission est réalisée et le coder gagne un revenu égal au produit SW x D"""
 
 def IsFinishMission(coder, liste_missions):
+    
+    """
+    Vérifie si une mission est terminée par un coder et réinitialise ses valeurs si elle est accomplie.
+
+    Args:
+    - coder (Coder): Le coder qui effectue la mission.
+    - liste_missions (list[Mission]): La liste des missions disponibles.
+
+    Returns:
+    - bool: True si la mission est terminée et réinitialisée, False sinon.
+    """
+    
     mission = FindMissionAssociatedToCoder(liste_missions, coder)
     if mission.GetRemainingWorkLoad() == 0:
        mission.ResetValues()
@@ -423,12 +572,32 @@ def IsFinishMission(coder, liste_missions):
 
 
 def MissionIsFinishedYouWinMoney(coder,liste_missions):
-        mission = FindMissionAssociatedToCoder(liste_missions,coder)
-        return coder.UpgradeMoneyAmount(mission.GetStartingWorkLoad()*mission.GetDifficulty())
+    """
+    Donne de l'argent au coder une fois la mission terminée.
+
+    Args:
+    - coder (Coder): Le coder ayant terminé la mission.
+    - liste_missions (list[Mission]): La liste des missions disponibles.
+
+    Returns:
+    - float: Le montant d'argent gagné par le coder en fonction de la mission accomplie.
+    """    
+    mission = FindMissionAssociatedToCoder(liste_missions,coder)
+    return coder.UpgradeMoneyAmount(mission.GetStartingWorkLoad()*mission.GetDifficulty())
 
 
 
 def EnoughEnergy(coder):
+    """
+    Vérifie si le coder a suffisamment d'énergie pour effectuer une mission.
+
+    Args:
+    - coder (Coder): Le coder à vérifier.
+
+    Returns:
+    - bool: True si le coder a suffisamment d'énergie, False sinon.
+    """
+    
     if coder.GetEnergy() > 0:
         return True
     else:
@@ -437,12 +606,20 @@ def EnoughEnergy(coder):
 
 
 
-
-"""Si un coder se trouve sur le JC, il peut réaliser une des actions suivantes qui sont des upgrades :
-augmenter de 1 son énergie max ;
-ou bien augmenter de 1 son coding level."""
-
 def CheckJobCenter(Board,coder):
+    
+    """
+    Vérifie si un coder se trouve sur le Job Center pour effectuer des améliorations : 
+    augmenter de 1 son énergie maximale ou son niveau de codage.
+
+    Args:
+    - Board (list): Le plateau de jeu.
+    - coder (Coder): Le coder à vérifier.
+
+    Returns:
+    - bool: True si le coder se trouve sur le Job Center, False sinon.
+    """
+    
     x,y = coder.GetPosition()
     if Board[10][10] == Board[x][y]:
         return True
@@ -451,14 +628,43 @@ def CheckJobCenter(Board,coder):
 
 
 def AskChoiceAtJobCenter():
+    
+    """
+    Propose au joueur de choisir entre deux actions possibles au Job Center :
+    - Augmenter l'énergie maximale ('a')/ Via un bouton pour la partie graphique.
+    - Augmenter le niveau de codage de 1 ('c')/ Via un des bouton pour la partie graphique.
+    Le joueur peut également choisir de ne rien faire en sélectionnant une direction.
 
+    Returns:
+    - str: La lettre correspondant à l'action choisie.
+    """
+    
     print("\n")
     decisionLetter = input(" Augmentez son énergie max('a') ou augmenter votre coding level de 1 ('c') ou ne faites rien (choisir une direction): ")
     print("\n")
     print("\n")
     return decisionLetter
 
+
+
+
 def MakeChoiceAtJobCenter(coder, decisionLetter):
+    
+    """
+    Effectue un choix au Job Center en fonction de la lettre de décision reçue.
+
+    Arguments :
+    coder : Coder
+        L'instance du Coder effectuant le choix.
+    decisionLetter : str
+        Lettre représentant le choix du joueur ('a' pour augmenter l'énergie max, 'c' pour augmenter le niveau de codage).
+
+    Returns :
+    bool or None
+        Si l'opération est réussie (l'énergie max ou le niveau de codage est augmenté), retourne True, sinon False.
+        Si aucune action n'est réalisée, retourne None.
+    """
+    
     coder.ResetEnergy() # On reset l'energie dans tout les cas
 
     if decisionLetter == 'a':

@@ -84,18 +84,18 @@ class WindowForGame:
                 x2 = x1 + self.CELL_SIZE
                 y2 = y1 + self.CELL_SIZE
                 self.canvas.create_rectangle(x1, y1, x2, y2, outline='black', fill='white')
-                if j == 0:
-                    self.canvas.create_text((i)* self.CELL_SIZE + self.CELL_SIZE // 2,
-                        (j)* self.CELL_SIZE + self.CELL_SIZE // 2,
-                        text = alphabet[i],
-                        font=("Arial", 20),  # Exemple de police et de taille de texte
-                        fill="black")  # Couleur du texte (ici noir)
-                if i == 0:
-                    self.canvas.create_text((i)* self.CELL_SIZE + self.CELL_SIZE // 2,
-                    (j)* self.CELL_SIZE + self.CELL_SIZE // 2,
-                    text = j,
-                    font=("Arial", 20),  # Exemple de police et de taille de texte
-                    fill="black")  # Couleur du texte (ici noir)
+                if j == 0 and i > 0:
+                    self.canvas.create_text(i * self.CELL_SIZE + self.CELL_SIZE // 2,
+                             j * self.CELL_SIZE + self.CELL_SIZE // 2,
+                             text=alphabet[i-1],
+                             font=("Arial", 20),
+                             fill="black")
+                if i == 0 and j > 0:
+                    self.canvas.create_text(i * self.CELL_SIZE + self.CELL_SIZE // 2,
+                            j * self.CELL_SIZE + self.CELL_SIZE // 2,
+                            text=j,
+                            font=("Arial", 20),
+                            fill="black")
 
                 
    

@@ -1,5 +1,7 @@
 import json
 import random
+# -*- coding: utf-8 -*-
+
 
 class Configuration:
     
@@ -12,7 +14,7 @@ class Configuration:
         self.liste_data_mission = []
 
         self.UpdateFile()
-        self.ReadFromFile() # On lit les données qui viennent d'être écrites dans le fichier json.
+        self.ReadFromFile() # On lit les donnï¿½es qui viennent d'ï¿½tre ï¿½crites dans le fichier json.
         
     def UpdateFile(self):
         if self.level == "facile":
