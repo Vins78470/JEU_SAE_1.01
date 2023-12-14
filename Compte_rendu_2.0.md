@@ -36,7 +36,6 @@ Je tiens à être le plus honnête possible en ce qui concerne mon travail et ma
 
 Nous nous sommes inspirés du jeu d'échecs pour créer un tableau (Board) avec des lettres en abscisse et des numéros en ordonnée, facilitant ainsi la repérage du joueur dans le tableau. De plus, dans la partie graphique, nous avons ajouté des boutons "Améliorer l'énergie maximale" et "Améliorer le niveau de coding" pour permettre au joueur de jouer sans avoir à utiliser le terminal.
 
-![Alt text](image-1.png)
 
 ## Architecture du Code
 
