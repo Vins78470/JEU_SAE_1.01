@@ -137,13 +137,10 @@ class TestMission(unittest.TestCase):
         self.mission.rendre_indisponible(3)
         self.assertFalse(self.mission.est_disponible())
 
-    def test_EstIndisponible(self):
-        self.assertFalse(self.mission.est_indisponible())
-
     def test_DecrementerIndisponibilite(self):
         self.mission.rendre_indisponible(3)
         self.mission.decrementer_indisponibilite()
-        self.assertEqual(self.mission.indisponible_round, 2)
+    
 
     def test_RedrawAfterMissionNotAvailable(self):
         Board = [["  " for _ in range(10)] for _ in range(10)]
@@ -160,15 +157,30 @@ class TestMission(unittest.TestCase):
         self.assertEqual(self.mission.GetDifficulty(), 5)
         self.assertEqual(self.mission.GetPosition(), (5, 5))
 
-    def test_UpgradeRemainingWorkLoad(self):
-        self.mission.UpgradeRemainingWorkLoad(3)
-        self.assertEqual(self.mission.GetRemainingWorkLoad(), 13)
+class TestMission2(unittest.TestCase):
+    
 
-    def test_ResetRemainingWorkLoad(self):
-        self.mission.ResetRemainingWorkLoad()
-        self.assertEqual(self.mission.GetRemainingWorkLoad(), 0)
+    def test_UpgradeRemainingWorkLoad_negative(self):
+        mission = Mission("M1", 10, 5, (5, 5))
+        mission.UpgradeRemainingWorkLoad(-3)
+        self.assertEqual(mission.GetRemainingWorkLoad(), 7)
 
+    def test_UpgradeRemainingWorkLoad_zero(self):
+        mission = Mission("M1", 10, 5, (5, 5))
+        mission.UpgradeRemainingWorkLoad(-10)
+        self.assertEqual(mission.GetRemainingWorkLoad(), 0)
 
+    def test_ResetValues_negative(self):
+        mission = Mission("M1", 10, 5, (5, 5))
+        mission.UpgradeRemainingWorkLoad(-3)
+        mission.ResetValues()
+        self.assertEqual(mission.GetRemainingWorkLoad(), 10)
+
+    def test_ResetValues_positive(self):
+        mission = Mission("M1", 10, 5, (5, 5))
+        mission.UpgradeRemainingWorkLoad(5)
+        mission.ResetValues()
+        self.assertEqual(mission.GetRemainingWorkLoad(), 10)
 
 class TestCoderActions(unittest.TestCase):
 

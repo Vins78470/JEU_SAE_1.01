@@ -6,6 +6,7 @@ from PartieGraphique import *
 from Game import *
 # -*- coding: utf-8 -*-
 
+ 
 
 mode = 0 #console
 mode = 1 #window
@@ -17,7 +18,7 @@ nb_coder = int(input(("A combien de coder(s) voulez vous jouer ? ")))
 # Verifie que l'utilisateur choisis entre 1 et 4 joueurs.
 
 if CheckNombreCoder(nb_coder) == False:
-   nb_coder = int(input(("A combien de coder(s) voulez vous jouer ? ")))
+    nb_coder = int(input(("A combien de coder(s) voulez vous jouer ? ")))
    
 
 # Verifie que l'utilisateur choisis entre les 3 niveaux de difficultes.
@@ -38,7 +39,7 @@ elif (difficultyChoice == "difficile"):
     game = Game(nb_coder, difficultyChoice,nb_de_missions= random.randint(5,10))    
 
 else: 
-   print("Choisissez un niveau possible ! ")
+    print("Choisissez un niveau possible ! ")
    
 
 
@@ -61,13 +62,17 @@ def Play(game, mode):
     """    
         
     game.start()
-    
-    if (mode == 0):
-        game.play()
-    elif (mode == 1): 
+
+    if (mode == 0): 
+       game.play()
+       
+    windowForGame = NULL
+    if (mode == 1): 
         windowForGame = WindowForGame(game, cell_size=30, nb_cell_width=22, nb_cell_height=22)
-        windowForGame.draw()
-        windowForGame.window.mainloop()
+        windowForGame.play()
+            
+            
+
 
         
 

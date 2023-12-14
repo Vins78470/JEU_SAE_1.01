@@ -11,7 +11,7 @@ import json
 class Game():
 
     def __init__(self, nb_coder,level,nb_de_missions):
-        
+
         self.nb_de_mission = nb_de_missions
         self.nb_coder = nb_coder
         self.configuration = Configuration(level)
@@ -34,16 +34,22 @@ class Game():
         Initialise les missions en creant des objets Mission et les ajoute a la liste des missions.
         Utilise les symboles et les parametres des missions provenant de la configuration.
         """
+        while len(self.liste_missions) < self.nb_de_mission:
 
-        for i in range(self.nb_de_mission):
-
+             iMission = len(self.liste_missions)
+             
              random_i = random.randint(1,20)
              random_j = random.randint(1,20)
+             if (IsJobCenter(self.Board, (random_i, random_j))):
+                 continue
+
+             if (GetMissionOnPosition(self.liste_missions, (random_i,random_j))):
+                 continue
              
-            # Met a jour le fichier JSON pour que les param�tres des missions soit differents (�criture et lecture de fichier)
+             # Met a jour le fichier JSON pour que les param�tres des missions soit differents (�criture et lecture de fichier)
              self.configuration.UpdateFile()
           
-             self.liste_missions.append(Mission(self.liste_symbole_missions[i], 
+             self.liste_missions.append(Mission(self.liste_symbole_missions[iMission], 
                                                 self.configuration.starting_workload, 
                                                 self.configuration.difficulty ,
                                                 (random_i,random_j)))
@@ -102,55 +108,43 @@ class Game():
             print(" Choisissez entre 1 et 4 joueurs : ")
             self.start()
 
-    def play(self):
+
+      
+    def draw_info_missions(self):
+        print(AfficherInfosMissions(self.liste_missions))
+        print("--------------------------------------------------------------------------------------------------------------------")
+        print("\n")
         
-        # D�marre le d�roulement du jeu.
-        # - Demande aux joueurs de se d�placer sur la carte et ex�cute les tours de jeu jusqu'� ce qu'un joueur atteigne les conditions de victoire.
-        # - Affiche les informations sur les missions et les joueurs � chaque tour.
-        # - V�rifie la validit� des mouvements saisis par les joueurs.
-        # - V�rifie si un joueur a atteint les conditions de victoire � chaque tour.
-        # - Affiche le r�sultat du jeu une fois termin�.
-        
-        while not self.isGameFinished:
-            for round in range(1, 1001):  
-                for coder in self.liste_coder:
-                    print(AfficherInfosMissions(self.liste_missions))
-                    print("--------------------------------------------------------------------------------------------------------------------")
-                    print("\n")
-                    print(AfficherInfosCoder(self.liste_coder))
-                    print("--------------------------------------------------------------------------------------------------------------------")
+    def draw_infos_coder(self):
+        print(AfficherInfosCoder(self.liste_coder))
+        print("--------------------------------------------------------------------------------------------------------------------")
 
-                    print(f"Tour {round}, Coder {coder.GetSymbol()}")
+    # returns moveDirection
+    def ask_coder_move(self, coder):
+        print(f"Tour {round}, Coder {coder.GetSymbol()}")
                     
-                    # Regarde si l'utilisateur a bien entr� une touche valide
-                    valid_letters = self.letter2MoveDictionnary.keys()
+        # Regarde si l'utilisateur a bien entr� une touche valide
+        valid_letters = self.letter2MoveDictionnary.keys()
                     
-                    moveLetter = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
+        while (True):
+            moveLetter = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
 
-                    while moveLetter not in valid_letters:
-                        print("\n")
-                        print("Veuillez entrer une lettre valide.")
-                        print("\n")
-                        moveLetter = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
+            while moveLetter not in valid_letters:
+                print("\n")
+                print("Veuillez entrer une lettre valide.")
+                print("\n")
+                moveLetter = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
 
-                    print("\n")
+            print("\n")
                    
-                    moveDirection = CherchePosition(moveLetter, self.letter2MoveDictionnary)
-
-                    if CheckDirectionInput(moveLetter, self.letter2MoveDictionnary):
-                        self.playOneRound(coder, moveDirection, round)
-
-                    else:
-                        print("Choisir une touche valide")
-
-                    if GameIsOver(coder) or coder.round == 10:
-                        self.isGameFinished = True
-                        break  # Sortir de la boucle des joueurs si un joueur a termin�
-            
-                if self.isGameFinished:
-                    break  # Sortir de la boucle principale si un joueur a termin�
-                
-        # Utilisation de la fonction max avec une fonction de clé personnalisée pour obtenir le joueur avec le montant d'argent maximal
+            moveDirection = CherchePosition(moveLetter, self.letter2MoveDictionnary)
+            if not CheckDirectionInput(moveLetter, self.letter2MoveDictionnary):
+                print("Choisir une touche valide")
+            else:
+                return moveDirection;
+           
+    def display_end(self):
+        # Utilisation de la fonction max avec une fonction lambda pour obtenir le joueur avec le montant d'argent maximal
         joueur_gagnant = max(self.liste_coder, key=lambda joueur: joueur.GetMoneyAmount(), default=None)
 
         if self.isGameFinished:
@@ -169,6 +163,10 @@ class Game():
                 print("\nLa limite de tours est atteinte\n")
 
 
+
+    def draw_coder(self, coder):
+        return self.ask_coder_move(coder)
+                       
 
     def playOneRound(self, coder, move, round):
             
@@ -198,10 +196,10 @@ class Game():
                 UpdateJobCenter(self.Board, self.liste_coder)
                 PrintBoard(self.Board)  # Affiche la Board
            
-            mission_for_coder = FindMissionAssociatedToCoder(self.liste_missions,coder)
     
-            if IsCoderOnaMission(coder, self.liste_missions):
-                     
+            if IsPositionOnMission(self.liste_missions, coder.GetPosition()):
+                  mission_for_coder = GetMissionOnPosition(self.liste_missions, coder.GetPosition())
+                   
                   if mission_for_coder.est_disponible():
                         print("\n")
                         print(" Vous venez d'arrivez sur une mission ! ")
@@ -213,41 +211,53 @@ class Game():
                         if IsFinishMission(coder, self.liste_missions):
                             MissionIsFinishedYouWinMoney(coder, self.liste_missions)
                             mission_for_coder.rendre_indisponible(mission_for_coder.GetDifficulty()*10)
-                        else:
-                            ReDrawMission(self.Board, self.liste_missions, coder)
+                        #else:
+                        #  DrawMission(self.Board, self.liste_missions, coder)
                      
                   else:
                       print(" Mission Non Disponible ! ")
 
             
-            if CheckJobCenter(self.Board,coder) :
-                self.checkCoderEnergy(coder, round)
-            
             # On boucle sur la liste de mission pour voir si une mission est disponible
             # => (dans ce cas on reset ces valeurs et on la redessine) si elle indisponible on d�cremente le compteur
             for mission in self.liste_missions:
-                if mission.est_disponible() == False:
-                    mission.decrementer_indisponibilite()
-                    #mission.ResetValues()
                 if mission.est_disponible():   
-                        mission.RedrawAfterMissionNotAvailable(self.Board)
+                    mission.RedrawAfterMissionNotAvailable(self.Board)
+                if not mission.est_disponible() :
+                    mission.decrementer_indisponibilite()
+                
 
-               
-    def checkCoderEnergy(self, coder, round):
-        
-        # V�rifie l'�nergie du joueur au centre d'emploi et affiche un message s'il y est depuis un certain nombre de tours.
-
-        # Args:
-        # - coder : Coder - Le joueur dont l'�nergie est v�rifi�e.
-        # - round : int - Le num�ro du tour actuel.
-
-        # Actions :
-        # - V�rifie si le joueur est au centre depuis un certain nombre de tours et affiche un message.
-
-        # Returns : None
-        # 
-        if CheckJobCenter(self.Board, coder) and round >= 2:
+    def CheckJobCenterCoderChoice(self, coder):
+        if IsJobCenter(self.Board,coder.GetPosition()) :
             print("Vous etes bien sur le Job Center")
             print("\n")
+            decisionLetter = AskChoiceAtJobCenter()
+            MakeChoiceAtJobCenter(coder, decisionLetter)
 
+    def draw_mission_only_if_no_coder(self, coder):
+        mission = GetMissionOnPosition(self.liste_missions,coder.GetPosition())
+        if (mission is not None):
+            DrawMission(self.Board, mission)
+        
+    def draw(self, coder):
+        self.draw_info_missions()
+        self.draw_infos_coder()
+        self.draw_mission_only_if_no_coder(coder)
+        moveDirection = self.draw_coder(coder)
+        return moveDirection
       
+        
+    def play(self):
+        moveDirection = NULL
+        gameover = False
+        while not gameover:
+            for coder in self.liste_coder:
+                 # attendre le test sur le dernier coder
+                if not IsGameOver(coder):
+                    moveDirection = self.draw(coder)
+                    self.playOneRound(coder, moveDirection, round)
+                    self.CheckJobCenterCoderChoice(coder)
+                    gameover=False
+                else:
+                    gameover=True
+                    self.display_end()

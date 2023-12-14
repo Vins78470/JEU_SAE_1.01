@@ -21,7 +21,7 @@ class Mission():
         - remaining_workload (int): La charge de travail restante de la mission.
         - difficulty (int): La difficulté de la mission.
         - position (tuple): La position de la mission sur le plateau.
-        - indisponible_round (int): Nombre de rounds où la mission est indisponible.
+        - unavailable_for_nb_round (int): Nombre de rounds où la mission est indisponible.
         """
         
         self.symbol = symbol
@@ -29,7 +29,7 @@ class Mission():
         self.remaining_workload = starting_workload
         self.difficulty = difficulty             
         self.position = position
-        self.indisponible_round = 0  # Nombre de round pendant lesquels la mission sera indisponible
+        self.unavailable_for_nb_round = 0  # Nombre de round pendant lesquels la mission sera indisponible
         
     
        # Valeurs initiales pour que quand la mission réapparaisse elle reprenne ses attributs
@@ -98,7 +98,7 @@ class Mission():
         Args:
         - round (int): Le nombre de rounds pour lesquels la mission sera indisponible.
         """
-        self.indisponible_round = round
+        self.unavailable_for_nb_round = round
        
     
     def est_disponible(self):
@@ -108,23 +108,15 @@ class Mission():
         Returns:
         - bool: True si la mission est disponible, sinon False.
         """
-        return self.indisponible_round == 0
+        return self.unavailable_for_nb_round == 0
     
-    def est_indisponible(self):
-        """
-        Vérifie si la mission est indisponible.
-
-        Returns:
-        - bool: True si la mission est indisponible, sinon False.
-        """
-        return self.indisponible_round < 0
 
     def decrementer_indisponibilite(self):
         """
         Diminue le temps d'indisponibilité de la mission d'un round s'il est supérieur à zéro.
         """
-        if self.indisponible_round > 0:
-            self.indisponible_round -= 1
+        if self.unavailable_for_nb_round > 0:
+            self.unavailable_for_nb_round -= 1
             
     def RedrawAfterMissionNotAvailable(self,Board):
         """
@@ -148,15 +140,18 @@ class Mission():
         self.position = self.position_initial
        
     
-    def UpgradeRemainingWorkLoad(self,amount):
+    def UpgradeRemainingWorkLoad(self, amount):
         """
         Met à jour la charge de travail restante de la mission.
 
         Args:
         - amount (int): La quantité à ajouter à la charge de travail restante.
         """
-        if self.remaining_workload - amount >=0:
+        if self.remaining_workload + amount >= 0:
             self.remaining_workload += amount
+        else:
+            # Si la soustraction donne une valeur négative, met à jour à 0
+            self.remaining_workload = 0
     
     def ResetRemainingWorkLoad(self):
         """

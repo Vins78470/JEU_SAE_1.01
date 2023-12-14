@@ -1,4 +1,5 @@
 import random
+from typing import Self
 from Coder import *
 from Mission import *
 import string
@@ -301,9 +302,8 @@ def DrawMissions(Board,liste_missions):
     """
 
     for mission in liste_missions:
-        mission_pos = mission.GetPosition()
-        Board[mission_pos[0]][mission_pos[1]] = mission.GetSymbol()
-    
+        DrawMission(Board, mission)
+
     return Board
         
 
@@ -311,7 +311,7 @@ def DrawMissions(Board,liste_missions):
 
 # Quand le coder passe sur une mission, si elle n'est pas fini on la redessine 
 
-def ReDrawMission(Board,liste_missions,coder):
+def DrawMission(Board, mission):
     """
     Redessine la mission associée au codeur sur le plateau s'il n'a pas encore été terminé.
 
@@ -323,9 +323,9 @@ def ReDrawMission(Board,liste_missions,coder):
     Returns:
     - None
     """
-    mission = FindMissionAssociatedToCoder(liste_missions,coder)
-    x,y = mission.GetPosition()
-    Board[x][y] = mission.GetSymbol()
+    if mission.est_disponible():
+        x,y = mission.GetPosition()
+        Board[x][y] = mission.GetSymbol()
     
 
     
@@ -372,7 +372,7 @@ def DeleteMission(liste_missions, coder):
     - object: La mission supprimée de la liste.
     """    
 
-    mission = FindMissionAssociatedToCoder(liste_missions, coder)
+    mission = GetMissionOnPosition(liste_missions, coder.GetPosition())
     tmp_mission = mission
     liste_missions.remove(mission)
     return tmp_mission
@@ -394,19 +394,24 @@ def AfficherInfosMissions(liste_missions):
     """
     mission_info_text = ""
     for i, mission in enumerate(liste_missions, 1):
+        if i < 10:
+            mission_info_text += (
+                    f"  - Mission  0{i}              : Symbole {mission.GetSymbol()}, ")
+        else:
+            mission_info_text += (
+                    f"  - Mission  {i}              : Symbole {mission.GetSymbol()}, ")
+
         mission_info_text += (
-            f"  - Mission {i}: Symbole {mission.GetSymbol()}, "
-            f"  - Position: {mission.GetPosition()}, "
-            f"  - Travail de base a faire :  {mission.GetStartingWorkLoad()}, "
-            f"  - Travail nécessaire: {mission.GetRemainingWorkLoad()}, "
-            f"  - Difficulté: {mission.GetDifficulty()}\n"
+            f"  - Position                  : {mission.GetPosition()}, "
+            f"  - Travail de base a faire   : {mission.GetStartingWorkLoad()}, "
+            f"  - Travail nécessaire        : {mission.GetRemainingWorkLoad()}, "
+            f"  - Difficulté                : {mission.GetDifficulty()}"
+            f"  - Indisponible pdt nb tours : {mission.unavailable_for_nb_round}\n"
         )      
     return mission_info_text
 
 
-
-
-def IsCoderOnaMission(coder, list_missions):
+def IsPositionOnMission(list_missions, position):
     
     """
     Vérifie si un coder est actuellement sur une mission.
@@ -418,17 +423,13 @@ def IsCoderOnaMission(coder, list_missions):
     Returns:
     - bool: True si le coder est sur une mission, False sinon.
     """
-    coder_position = coder.GetPosition()
     for mission in list_missions:
-        mission_position = mission.GetPosition()
-        if coder_position == mission_position:
+        if position == mission.GetPosition():
             return True
     return False
 
 
-
-
-def GameIsOver(coder):
+def IsGameOver(coder):
     """
     Vérifie si le match est terminé en fonction de la quantité d'argent accumulée par le coder.
 
@@ -438,29 +439,27 @@ def GameIsOver(coder):
     Returns:
     - bool: True si le montant d'argent du coder atteint ou dépasse 5000฿, sinon False.
     """
-    if coder.GetMoneyAmount() >= 5000:
+    if coder.GetMoneyAmount() >= 5000 or coder.round == 1000:
         return True
     else:
         return False
 
-
-
-def FindMissionAssociatedToCoder(liste_missions,coder):
+def GetMissionOnPosition(liste_missions, position):
     """
-    Trouve la mission associée à un coder en comparant leurs positions.
+    Trouve la mission associée à une position .
 
     Args:
     - liste_missions (list): Liste des missions existantes.
-    - coder (Coder): Le coder pour lequel on cherche la mission associée.
+    - position: positio sous forme de tuple.
 
     Returns:
     - Mission: La mission associée au coder s'ils partagent la même position, sinon None.
     """    
-
+    
     for mission in liste_missions:
-        if coder.GetPosition() == mission.GetPosition():
+        if position == mission.GetPosition():
             return mission
-
+    return None
 
 
 """le coût en dollar est égal au carré du niveau désiré, fois 10\฿. Ces actions sont
@@ -526,7 +525,7 @@ def DepenseCoderEnergyPourLaMission(coder,liste_missions):
     - int: La nouvelle valeur de l'énergie du coder après la dépense pour la mission.
     """
     
-    mission = FindMissionAssociatedToCoder(liste_missions,coder)
+    mission = GetMissionOnPosition(liste_missions,coder.GetPosition())
     return coder.UpgradeEnergy(-(mission.GetDifficulty()))
     
 
@@ -545,7 +544,7 @@ def DepenseRwMission(coder,liste_missions):
     Returns:
     - int: La nouvelle valeur de la charge de travail restante de la mission après la dépense par le coder.
     """
-    mission = FindMissionAssociatedToCoder(liste_missions,coder)
+    mission = GetMissionOnPosition(liste_missions,coder.GetPosition())
     return mission.UpgradeRemainingWorkLoad(-(coder.GetCodingLevel()))
     
 
@@ -566,7 +565,7 @@ def IsFinishMission(coder, liste_missions):
     - bool: True si la mission est terminée et réinitialisée, False sinon.
     """
     
-    mission = FindMissionAssociatedToCoder(liste_missions, coder)
+    mission = GetMissionOnPosition(liste_missions, coder.GetPosition())
     if mission.GetRemainingWorkLoad() == 0:
        mission.ResetValues()
        return True
@@ -584,7 +583,7 @@ def MissionIsFinishedYouWinMoney(coder,liste_missions):
     Returns:
     - float: Le montant d'argent gagné par le coder en fonction de la mission accomplie.
     """    
-    mission = FindMissionAssociatedToCoder(liste_missions,coder)
+    mission = GetMissionOnPosition(liste_missions,coder.GetPosition())
     return coder.UpgradeMoneyAmount(mission.GetStartingWorkLoad()*mission.GetDifficulty())
 
 
@@ -608,7 +607,7 @@ def EnoughEnergy(coder):
 
 
 
-def CheckJobCenter(Board,coder):
+def IsJobCenter(Board, position):
     
     """
     Vérifie si un coder se trouve sur le Job Center pour effectuer des améliorations : 
@@ -622,7 +621,7 @@ def CheckJobCenter(Board,coder):
     - bool: True si le coder se trouve sur le Job Center, False sinon.
     """
     
-    x,y = coder.GetPosition()
+    x,y = position
     if Board[10][10] == Board[x][y]:
         return True
     else:
