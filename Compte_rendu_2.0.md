@@ -22,7 +22,7 @@ Dans un premier temps, nous avons décomposé le lancement du jeu en deux partie
 
 Tout d'abord, Vincent et moi-même ne disposons pas du même niveau en Python. C'est pourquoi il a décidé de m'accompagner dans le projet et de prendre le temps de m'expliquer de nouvelles notions, notamment la programmation orientée objet. J'ai créé quelques classes avec leurs objets et réalisé la mise en place de certaines fonctions. Néanmoins, Vincent a réalisé la majeure partie du travail. J'ai beaucoup appris à travers les enseignements de Vincent, tels que la création du tableau de jeu (Board), les déplacements, et bien d'autres aspects.
 
-Nous tenons  à être le plus honnête possible en ce qui concerne la répartition du travail.
+Nous tenons à être les plus honnêtes possible en ce qui concerne la répartition du travail.
 
 
 ## Difficultés Rencontrées
@@ -35,8 +35,7 @@ Nous tenons  à être le plus honnête possible en ce qui concerne la répartiti
 
 ## Les idées Novatrices 
 
-Nous nous sommes inspirés du jeu d'échecs pour créer un tableau (Board) avec des lettres en abscisse et des numéros en ordonnée, facilitant ainsi la repérage du joueur dans le tableau. De plus, dans la partie graphique, nous avons ajouté des boutons "Améliorer l'énergie maximale" et "Améliorer le niveau de coding" pour permettre au joueur de jouer sans avoir à utiliser le terminal. Lors du lancement du mode graphique, la fenêtre s'ouvre et la console aussi et les messages d'interactions que reçoit le joueur se trouve dans la console. Donc lorsqu'on joue il est important de garder les 2 fênetres ouvertes.  
-
+Nous nous sommes inspirés du jeu d'échecs pour créer un tableau (Board) avec des lettres en abscisse et des numéros en ordonnée, facilitant ainsi la repérage du joueur dans le tableau. De plus, dans la partie graphique, nous avons ajouté des boutons "Améliorer l'énergie maximale" et "Améliorer le niveau de coding" pour permettre au joueur de jouer sans avoir à utiliser le terminal. Lorsque le mode graphique est activé, la fenêtre graphique et la console s'ouvrent simultanément. Les messages d'interaction destinés au joueur apparaissent dans la console. Par conséquent, il est essentiel de maintenir ouvertes les deux fenêtres pendant le jeu.  
 
 ## Architecture du Code
 
@@ -51,7 +50,7 @@ Nous nous sommes inspirés du jeu d'échecs pour créer un tableau (Board) avec 
   
 - **Game** : Ce module gère la logique du jeu en utilisant les classes Coder et Mission. Il initialise le jeu, gère le déroulement des tours, les interactions entre les joueurs et les missions, et détecte les conditions de fin de jeu.
   
-- **Partie Graphique** : Responsable de l'interface graphique du jeu. Cette partie inclut les éléments nécessaires à la création de la fenêtre de jeu, au dessin du plateau, et à la gestion des événements graphiques (clics, mouvements de souris, etc.).
+- **Partie Graphique** : Responsable de l'interface graphique du jeu. Cette partie inclut les éléments nécessaires à la création de la fenêtre de jeu, au dessin du plateau, et à la gestion des événements graphiques.
   
 - **Rules** : Ce module définit les règles du jeu et les validations des actions des joueurs. Il contient des fonctions de vérification, telles que la validation du nombre de joueurs choisis, du niveau de difficulté, ou encore la validation des déplacements et des actions des joueurs.
   
@@ -115,13 +114,6 @@ Réagit aux actions de l'utilisateur, telles que les déplacements de coder, les
 
 Cette architecture séparée entre la partie logique et l'interface graphique permet une meilleure gestion du jeu, facilite les tests et les modifications ultérieures, et rend l'ensemble du code plus modulaire et compréhensible.
 
-## Difficultés Rencontrées
-
-**Adaptation du code en objets** : Lors du développement initial, une partie du jeu a été construite sans utiliser la programmation orientée objet (POO). Cependant, lorsqu'on a envisagé d'ajouter une interface graphique, on a réalisé qu'il était nécessaire de restructurer tout le code en utilisant des objets pour permettre une meilleure intégration de cette nouvelle fonctionnalité.
-
-**Transition de la console à l'interface graphique** : La transition de la version console à une version avec une interface graphique a été particulièrement difficile. La logique de jeu conçue pour la console devait être revue entièrement pour s'adapter à l'interface graphique. Cela a impliqué des changements significatifs dans la gestion des interactions et de l'affichage.
-
-**Complexité de la conversion** : La complexité de cette conversion était notable. Passer du mode console au mode graphique a requis une refonte totale de la structure et de l'organisation du code. Séparer les éléments visuels de la logique du jeu, ainsi que mettre en place une communication efficace entre ces deux parties, a représenté un défi technique de taille.
 
 
 ## Conclusion
