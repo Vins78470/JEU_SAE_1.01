@@ -112,7 +112,7 @@ class Game():
         # - Affiche le r�sultat du jeu une fois termin�.
         
         while not self.isGameFinished:
-            for round in range(1, 50000):  # Par exemple, 50000 tours
+            for round in range(1, 1001):  
                 for coder in self.liste_coder:
                     print(AfficherInfosMissions(self.liste_missions))
                     print("--------------------------------------------------------------------------------------------------------------------")
@@ -149,19 +149,25 @@ class Game():
             
                 if self.isGameFinished:
                     break  # Sortir de la boucle principale si un joueur a termin�
-        
+                
         # Utilisation de la fonction max avec une fonction de clé personnalisée pour obtenir le joueur avec le montant d'argent maximal
         joueur_gagnant = max(self.liste_coder, key=lambda joueur: joueur.GetMoneyAmount(), default=None)
-        
+
         if self.isGameFinished:
             if joueur_gagnant is not None:
-                print("\nLe jeu est fini. Le joueur " + str(joueur_gagnant.GetSymbol()) + " a gagné.")
-                print("\n")
-                print("\n")
+                # Vérifier s'il y a égalité
+                gagnants = [j for j in self.liste_coder if j.GetMoneyAmount() == joueur_gagnant.GetMoneyAmount()]
+
+                if len(gagnants) == 1:
+                    print("\nLe jeu est fini. Le joueur " + str(joueur_gagnant.GetSymbol()) + " a gagné.\n")
+                else:
+                    print("\nÉgalité entre les joueurs:")
+                    for gagnant in gagnants:
+                        print("Joueur " + str(gagnant.GetSymbol()) + " a la même richesse maximale.")
+                    print("\n")
             else:
-                print("\n")
-                print("La limite de tours est atteinte")
-                print("\n")
+                print("\nLa limite de tours est atteinte\n")
+
 
 
     def playOneRound(self, coder, move, round):
@@ -181,8 +187,8 @@ class Game():
             # - Actualise l'�tat des missions sur la carte.
 
             # Returns : None
-   
-            
+
+        
             if IsMovable(move, coder, self.liste_coder):
                 coder.round +=1
                 print(coder.round)
