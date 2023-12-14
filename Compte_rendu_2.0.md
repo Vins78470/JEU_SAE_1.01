@@ -16,13 +16,14 @@
 7. [Conclusion](#conclusion)
 
 ## Introduction
-Dans un premier temps, nous avons décomposé le lancement du jeu en deux parties distinctes. Afin d'initier le jeu, nous devons ajuster les paramètres de la fonction Play(), lesquels comprennent les attributs game et mode. L'utilisation du mode 0 permet de lancer le jeu dans le terminal, tandis que le mode 1 est réservé au lancement du jeu dans l'interface graphique. L'appel de la fonction se trouve à la fin du fichier principal. Enfin, pour débuter le jeu, il est nécessaire d'être situé dans le fichier principal.
+Dans un premier temps, nous avons décomposé le lancement du jeu en deux parties distinctes. Afin d'initier le jeu, nous devons ajuster les paramètres de la fonction Play(), lesquels comprennent les attributs game et mode. L'utilisation du mode 0 permet de lancer le jeu dans le terminal, tandis que le mode 1 est réservé au lancement du jeu dans l'interface graphique. L'appel de la fonction se trouve à la fin du fichier principal. Enfin, pour débuter le jeu, il est nécessaire d'être situé dans le fichier principal ( Main.py).
 
 ## Répartition du Travail 
 
 Tout d'abord, Vincent et moi-même ne disposons pas du même niveau en Python. C'est pourquoi il a décidé de m'accompagner dans le projet et de prendre le temps de m'expliquer de nouvelles notions, notamment la programmation orientée objet. J'ai créé quelques classes avec leurs objets et réalisé la mise en place de certaines fonctions. Néanmoins, Vincent a réalisé la majeure partie du travail. J'ai beaucoup appris à travers les enseignements de Vincent, tels que la création du tableau de jeu (Board), les déplacements, et bien d'autres aspects.
 
-Je tiens à être le plus honnête possible en ce qui concerne mon travail et ma contribution.
+Nous tenons  à être le plus honnête possible en ce qui concerne la répartition du travail.
+
 
 ## Difficultés Rencontrées
 
@@ -34,7 +35,7 @@ Je tiens à être le plus honnête possible en ce qui concerne mon travail et ma
 
 ## Les idées Novatrices 
 
-Nous nous sommes inspirés du jeu d'échecs pour créer un tableau (Board) avec des lettres en abscisse et des numéros en ordonnée, facilitant ainsi la repérage du joueur dans le tableau. De plus, dans la partie graphique, nous avons ajouté des boutons "Améliorer l'énergie maximale" et "Améliorer le niveau de coding" pour permettre au joueur de jouer sans avoir à utiliser le terminal.
+Nous nous sommes inspirés du jeu d'échecs pour créer un tableau (Board) avec des lettres en abscisse et des numéros en ordonnée, facilitant ainsi la repérage du joueur dans le tableau. De plus, dans la partie graphique, nous avons ajouté des boutons "Améliorer l'énergie maximale" et "Améliorer le niveau de coding" pour permettre au joueur de jouer sans avoir à utiliser le terminal. Lors du lancement du mode graphique, la fenêtre s'ouvre et la console aussi et les messages d'interactions que reçoit le joueur se trouve dans la console. Donc lorsqu'on joue il est important de garder les 2 fênetres ouvertes.  
 
 
 ## Architecture du Code
@@ -69,7 +70,7 @@ Chaque classe correspond à un aspect spécifique du jeu, ce qui permet une orga
 
 **Gestion des missions** : Les missions apparaissent à des emplacements spécifiques, elles ont des objectifs et des difficultés. Les joueurs peuvent les prendre, les réaliser, et gagner des récompenses en fonction de leur niveau de difficulté.
 
-**Détection de fin de jeu** : Le jeu se termine lorsqu'un joueur atteint 5000 bitcoins
+**Détection de fin de jeu** : Le jeu se termine lorsqu'un joueur atteint 5000 bitcoins ou lorsque le nombre de tour atteint 1000. 
 
 **Fonctionnement de la console ou de l'interface graphique** : Chaque mode offre une expérience de jeu différente mais suit la même logique de fonctionnement et les mêmes règles.
 

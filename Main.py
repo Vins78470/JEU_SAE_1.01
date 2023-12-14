@@ -69,6 +69,6 @@ def Play(game, mode):
         windowForGame.window.mainloop()
 
 
-Play(game, 1) # Pour jouer en mode fenetre graphique.
+Play(game, 0) # Pour jouer en mode fenetre graphique (gardez bien la fenetre de la console ouverte pour avoir les messages d'intéraction !!!!).
 
 #Play(game, 0) -> Pour jouer en mode console.

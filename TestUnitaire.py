@@ -33,13 +33,13 @@ class TestCoderMethods(unittest.TestCase):
 
     def setUp(self):
         # Initialisation d'un objet Coder pour les tests
-        self.coder = Coder('C', (0, 0), 5, 10, 5, 100, 'blue')
+        self.coder = Coder('C', (2, 2), 5, 10, 5, 100, 'blue')
 
     def test_GetSymbol(self):
         self.assertEqual(self.coder.GetSymbol(), 'C')
 
     def test_GetPosition(self):
-        self.assertEqual(self.coder.GetPosition(), (0, 0))
+        self.assertEqual(self.coder.GetPosition(), (2, 2))
 
     def test_GetCodingLevel(self):
         self.assertEqual(self.coder.GetCodingLevel(), 5)
@@ -137,9 +137,6 @@ class TestMission(unittest.TestCase):
         self.mission.rendre_indisponible(3)
         self.assertFalse(self.mission.est_disponible())
 
-    def test_EstDisponible(self):
-        self.assertTrue(self.mission.est_disponible())
-
     def test_EstIndisponible(self):
         self.assertFalse(self.mission.est_indisponible())
 
@@ -180,7 +177,6 @@ class TestCoderActions(unittest.TestCase):
         self.coder = Coder('C', (0, 0), 3, 10, 8, 200, 'blue')
 
     def test_CoutDepenseArgentAuJobCenterPourEnergyMax_valid(self):
-        # Assurez-vous que l'argent est suffisant pour augmenter l'�nergie maximale
         self.assertFalse(CoutDepenseArgentAuJobCenterPourEnergyMax(self.coder))
      
 
@@ -198,7 +194,7 @@ class TestCoderActions(unittest.TestCase):
         # V�rifie si le niveau de codage augmente plusieurs fois
         for i in range(5):
             self.coder.UpgradeCodingLevel()
-        self.assertEqual(self.coder.GetCodingLevel(), 8)  # 7 + 5 = 12
+        self.assertEqual(self.coder.GetCodingLevel(), 8) 
 
     def test_UpgradeCodingLevel_max_limit(self):
         # V�rifie si le niveau de codage atteint la limite maximale

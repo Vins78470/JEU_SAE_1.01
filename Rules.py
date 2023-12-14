@@ -158,7 +158,9 @@ def IsCaseEmpty(position, liste_coder):
     """
     
     for coder in liste_coder:
-        if coder.GetPosition() == position:
+        if position == (10,10):
+            return True
+        if (coder.GetPosition() == position):
             return False  # La case n'est pas vide, elle est occupée par un coder
     return True  # Aucun coder n'occupe cette case, elle est vide
 

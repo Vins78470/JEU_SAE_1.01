@@ -29,6 +29,7 @@ class Coder():
         self.color = color
         self.rect = NULL
         self.logo = NULL
+        self.round = 0
     
     
     def GetSymbol(self):

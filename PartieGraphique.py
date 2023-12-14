@@ -165,7 +165,7 @@ class WindowForGame:
 
         if CheckJobCenter(self.game.Board, coder):
 
-            self.btn_energie_max = Button(self.window, text="Améliorer l'énergie max", command=lambda: self.ameliorer_energie_max(coder))
+            self.btn_energie_max = Button(self.window, text="Améliorer l'énergie max", command=lambda: self.ameliorer_energie_max(coder)) # On utilise un lambda car sinon ne peut pas passer le coder en arguments.
             self.btn_energie_max.pack()
 
             self.btn_niveau_codage = Button(self.window, text="Améliorer le niveau de codage", command=lambda: self.ameliorer_niveau_codage(coder))

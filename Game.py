@@ -24,7 +24,7 @@ class Game():
         self.Board = []
         self.isGameFinished = False
         
-    # Prend en argument la géneration des symboles et par consequent son nombre de missions et créer des objets missions puis les mets dans une liste de mission
+    # Prend en argument la gï¿½neration des symboles et par consequent son nombre de missions et crï¿½er des objets missions puis les mets dans une liste de mission
 
 
     def InitialisationMission(self):
@@ -40,7 +40,7 @@ class Game():
              random_i = random.randint(1,20)
              random_j = random.randint(1,20)
              
-            # Met a jour le fichier JSON pour que les paramètres des missions soit differents (écriture et lecture de fichier)
+            # Met a jour le fichier JSON pour que les paramï¿½tres des missions soit differents (ï¿½criture et lecture de fichier)
              self.configuration.UpdateFile()
           
              self.liste_missions.append(Mission(self.liste_symbole_missions[i], 
@@ -64,24 +64,24 @@ class Game():
     
 
 
-    # Genere le nombre de missions qu'il y aura et créer des symboles pour ces missions
+    # Genere le nombre de missions qu'il y aura et crï¿½er des symboles pour ces missions
 
     def GenerateSymbolMission(self):
        
-        # Génère les symboles pour les missions en fonction du nombre de missions defini.
+        # Gï¿½nï¿½re les symboles pour les missions en fonction du nombre de missions defini.
         # Ces symboles sont crees sous la forme de 'M1', 'M2', ... jusqu'au nombre total de missions.
-        # Les symboles sont stockés dans la liste 'liste_symbole_missions'.
+        # Les symboles sont stockï¿½s dans la liste 'liste_symbole_missions'.
         for j in range (self.nb_de_mission):
             self.liste_symbole_missions.append("M"+str(j+1))
 
 
     def start(self):
         
-        # Démarre le jeu.
+        # Dï¿½marre le jeu.
         #- Initialise le plateau de jeu avec une taille de 21x21.
-        #- Vérifie le nombre de joueurs pour le jeu.
+        #- Vï¿½rifie le nombre de joueurs pour le jeu.
         #- Initialise les joueurs et les missions.
-        #- Affiche le plateau de jeu après les initialisations.
+        #- Affiche le plateau de jeu aprï¿½s les initialisations.
         
         self.Board = InitBoard(self.Board)  # Initialise la board 21*21
         print(" Bienvenue sur ESN Wars ! ")
@@ -96,7 +96,7 @@ class Game():
             
             self.Board = DrawPlayerAtJobCenter(self.Board, self.liste_coder)
             self.Board = DrawMissions(self.Board, self.liste_missions)
-            PrintBoard(self.Board)  # Affiche la Board dans la console après les initialisations
+            PrintBoard(self.Board)  # Affiche la Board dans la console aprï¿½s les initialisations
             
         else:
             print(" Choisissez entre 1 et 4 joueurs : ")
@@ -104,15 +104,15 @@ class Game():
 
     def play(self):
         
-        # Démarre le déroulement du jeu.
-        # - Demande aux joueurs de se déplacer sur la carte et exécute les tours de jeu jusqu'à ce qu'un joueur atteigne les conditions de victoire.
-        # - Affiche les informations sur les missions et les joueurs à chaque tour.
-        # - Vérifie la validité des mouvements saisis par les joueurs.
-        # - Vérifie si un joueur a atteint les conditions de victoire à chaque tour.
-        # - Affiche le résultat du jeu une fois terminé.
+        # Dï¿½marre le dï¿½roulement du jeu.
+        # - Demande aux joueurs de se dï¿½placer sur la carte et exï¿½cute les tours de jeu jusqu'ï¿½ ce qu'un joueur atteigne les conditions de victoire.
+        # - Affiche les informations sur les missions et les joueurs ï¿½ chaque tour.
+        # - Vï¿½rifie la validitï¿½ des mouvements saisis par les joueurs.
+        # - Vï¿½rifie si un joueur a atteint les conditions de victoire ï¿½ chaque tour.
+        # - Affiche le rï¿½sultat du jeu une fois terminï¿½.
         
         while not self.isGameFinished:
-            for round in range(1, 500):  # Par exemple, 500 tours
+            for round in range(1, 50000):  # Par exemple, 50000 tours
                 for coder in self.liste_coder:
                     print(AfficherInfosMissions(self.liste_missions))
                     print("--------------------------------------------------------------------------------------------------------------------")
@@ -122,7 +122,7 @@ class Game():
 
                     print(f"Tour {round}, Coder {coder.GetSymbol()}")
                     
-                    # Regarde si l'utilisateur a bien entré une touche valide
+                    # Regarde si l'utilisateur a bien entrï¿½ une touche valide
                     valid_letters = self.letter2MoveDictionnary.keys()
                     
                     moveLetter = input("Choisissez une case ou aller ( choix entre : h, b, g, d): ")
@@ -143,21 +143,25 @@ class Game():
                     else:
                         print("Choisir une touche valide")
 
-                    if GameIsOver(coder):
+                    if GameIsOver(coder) or coder.round == 10:
                         self.isGameFinished = True
-                        break  # Sortir de la boucle des joueurs si un joueur a terminé
+                        break  # Sortir de la boucle des joueurs si un joueur a terminï¿½
             
                 if self.isGameFinished:
-                    break  # Sortir de la boucle principale si un joueur a terminé
-
+                    break  # Sortir de la boucle principale si un joueur a terminï¿½
+        
+        # Utilisation de la fonction max avec une fonction de clÃ© personnalisÃ©e pour obtenir le joueur avec le montant d'argent maximal
+        joueur_gagnant = max(self.liste_coder, key=lambda joueur: joueur.GetMoneyAmount(), default=None)
+        
         if self.isGameFinished:
-            print("\n")
-            print("Le jeu est fini " + str(coder.GetSymbol()) + " a gagne ")
-            print("\n")
-        else:
-            print("\n")
-            print("La limite de tours est atteinte")
-            print("\n")
+            if joueur_gagnant is not None:
+                print("\nLe jeu est fini. Le joueur " + str(joueur_gagnant.GetSymbol()) + " a gagnÃ©.")
+                print("\n")
+                print("\n")
+            else:
+                print("\n")
+                print("La limite de tours est atteinte")
+                print("\n")
 
 
     def playOneRound(self, coder, move, round):
@@ -168,18 +172,20 @@ class Game():
             # Args:
             # - coder : Coder - Le joueur en action pour ce tour.
             # - move : tuple - La direction de mouvement choisie par le joueur.
-            # - round : int - Le numéro du tour actuel.
+            # - round : int - Le numï¿½ro du tour actuel.
 
             # Actions :
-            # - Vérifie si le mouvement est possible pour le joueur, le déplace sur la carte, met à jour son emplacement et l'affiche.
-            # - Vérifie si le joueur est sur une mission et agit en conséquence (dépense d'énergie, mise à jour de la mission, etc.).
-            # - Vérifie et met à jour l'énergie du joueur s'il est au centre.
-            # - Actualise l'état des missions sur la carte.
+            # - Vï¿½rifie si le mouvement est possible pour le joueur, le dï¿½place sur la carte, met ï¿½ jour son emplacement et l'affiche.
+            # - Vï¿½rifie si le joueur est sur une mission et agit en consï¿½quence (dï¿½pense d'ï¿½nergie, mise ï¿½ jour de la mission, etc.).
+            # - Vï¿½rifie et met ï¿½ jour l'ï¿½nergie du joueur s'il est au centre.
+            # - Actualise l'ï¿½tat des missions sur la carte.
 
             # Returns : None
    
             
             if IsMovable(move, coder, self.liste_coder):
+                coder.round +=1
+                print(coder.round)
                 DeletePlayer(self.Board, coder)
                 coder.MovePosition(move)
                 DrawPlayer(self.Board, coder)
@@ -212,7 +218,7 @@ class Game():
                 self.checkCoderEnergy(coder, round)
             
             # On boucle sur la liste de mission pour voir si une mission est disponible
-            # => (dans ce cas on reset ces valeurs et on la redessine) si elle indisponible on décremente le compteur
+            # => (dans ce cas on reset ces valeurs et on la redessine) si elle indisponible on dï¿½cremente le compteur
             for mission in self.liste_missions:
                 if mission.est_disponible() == False:
                     mission.decrementer_indisponibilite()
@@ -223,14 +229,14 @@ class Game():
                
     def checkCoderEnergy(self, coder, round):
         
-        # Vérifie l'énergie du joueur au centre d'emploi et affiche un message s'il y est depuis un certain nombre de tours.
+        # Vï¿½rifie l'ï¿½nergie du joueur au centre d'emploi et affiche un message s'il y est depuis un certain nombre de tours.
 
         # Args:
-        # - coder : Coder - Le joueur dont l'énergie est vérifiée.
-        # - round : int - Le numéro du tour actuel.
+        # - coder : Coder - Le joueur dont l'ï¿½nergie est vï¿½rifiï¿½e.
+        # - round : int - Le numï¿½ro du tour actuel.
 
         # Actions :
-        # - Vérifie si le joueur est au centre depuis un certain nombre de tours et affiche un message.
+        # - Vï¿½rifie si le joueur est au centre depuis un certain nombre de tours et affiche un message.
 
         # Returns : None
         # 
