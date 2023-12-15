@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 from Rules import *
 from Coder import *
 from Mission import *
@@ -78,6 +78,6 @@ def Play(game, mode):
 
 
 
-Play(game, 1) # Pour jouer en mode fenetre graphique (gardez bien la fenetre de la console ouverte pour avoir les messages d'intéraction !!!!).
+Play(game, 0) # Pour jouer en mode fenetre graphique (gardez bien la fenetre de la console ouverte pour avoir les messages d'intéraction !!!!).
 
 #Play(game, 0) -> Pour jouer en mode console.

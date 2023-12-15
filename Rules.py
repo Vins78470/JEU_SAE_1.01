@@ -1,5 +1,5 @@
 import random
-from typing import Self
+
 from Coder import *
 from Mission import *
 import string

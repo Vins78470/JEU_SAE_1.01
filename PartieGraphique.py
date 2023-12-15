@@ -1,7 +1,5 @@
 
-from operator import length_hint
 from tkinter import *
-from turtle import fillcolor
 from Coder import *
 from Mission import *
 from Rules import AfficherInfosCoder, AfficherInfosMissions
@@ -22,7 +20,7 @@ class WindowForGame:
         self.HEIGHT = self.CELL_SIZE * self.NB_CELL_HEIGHT
         self.LEN = self.WIDTH  * self.HEIGHT
         self.game = game
-
+        self.round = 0
         self.window = Tk()
         self.window.title("ESN GAME")
 
@@ -41,13 +39,21 @@ class WindowForGame:
         self.canvas.create_text(10 * self.CELL_SIZE + self.CELL_SIZE // 2,
                                 10 * self.CELL_SIZE + self.CELL_SIZE // 2,
                                 text="JC",
-                                font=("Arial", 20),  # Exemple de police et de taille de texte
+                                font=("Arial", 20),  
                                 fill="black")  # Couleur du texte (ici noir)
 
         
-     
+        self.btn_passer_tour = Button(self.window, text="Passer son tour", command=self.passer_tour)
+        self.btn_passer_tour.pack(padx=20, pady=10)
+
+    def passer_tour(self):
+        self.round += 1  # Incrémenter le tour actuel
+
+       
         
-        self.round = 0
+
+        
+        
         
     def draw_info_missions(self):
         # Cr�ation de la cha�ne de texte pour les informations sur les missions
@@ -59,7 +65,7 @@ class WindowForGame:
         # Cr�ation du label avec les informations des missions
         #mission_info_label = Label(self.window, text=mission_info_text)
         self.missions_label.pack(side="right",anchor="n", padx=10, pady=10)
-        #self.mission_info_label.text = mission_info_text
+        
 
 
         

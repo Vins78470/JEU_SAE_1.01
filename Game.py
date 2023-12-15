@@ -119,7 +119,7 @@ class Game():
         print(AfficherInfosCoder(self.liste_coder))
         print("--------------------------------------------------------------------------------------------------------------------")
 
-    # returns moveDirection
+    
     def ask_coder_move(self, coder):
         print(f"Tour {round}, Coder {coder.GetSymbol()}")
                     
@@ -144,6 +144,7 @@ class Game():
                 return moveDirection;
            
     def display_end(self):
+
         # Utilisation de la fonction max avec une fonction lambda pour obtenir le joueur avec le montant d'argent maximal
         joueur_gagnant = max(self.liste_coder, key=lambda joueur: joueur.GetMoneyAmount(), default=None)
 
