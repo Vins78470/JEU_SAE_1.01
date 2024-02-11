@@ -20,7 +20,7 @@ class WindowForGame:
         self.HEIGHT = self.CELL_SIZE * self.NB_CELL_HEIGHT
         self.LEN = self.WIDTH  * self.HEIGHT
         self.game = game
-
+        self.round = 0
         self.window = Tk()
         self.window.title("ESN GAME")
 
@@ -30,9 +30,7 @@ class WindowForGame:
 
         self.draw_board()  # Appel de la methode draw_board() pour dessiner la grille d�s la creation de la fenetre
         
-
-        
-        self.canvas.bind_all('<KeyPress>', self.move_coder)
+        self.canvas.bind_all('<KeyPress>', self.move_coder_on_key_pressed)
 
         self.missions_label = Label(self.window, text="")
         self.coder_label = Label(self.window, text="")
@@ -41,32 +39,40 @@ class WindowForGame:
         self.canvas.create_text(10 * self.CELL_SIZE + self.CELL_SIZE // 2,
                                 10 * self.CELL_SIZE + self.CELL_SIZE // 2,
                                 text="JC",
-                                font=("Arial", 20),  # Exemple de police et de taille de texte
+                                font=("Arial", 20),  
                                 fill="black")  # Couleur du texte (ici noir)
 
         
-     
+        self.btn_passer_tour = Button(self.window, text="Passer son tour", command=self.passer_tour)
+        self.btn_passer_tour.pack(padx=20, pady=10)
+
+    def passer_tour(self):
+        self.round += 1  # Incrémenter le tour actuel
+
+       
         
-        self.round = 0
+
         
-    def afficher_info_missions(self, liste_missions):
+        
+        
+    def draw_info_missions(self):
         # Cr�ation de la cha�ne de texte pour les informations sur les missions
         mission_info_text = "Liste des missions :\n"
-        mission_info_text = AfficherInfosMissions(liste_missions)
+        mission_info_text = AfficherInfosMissions(self.game.liste_missions)
 
         self.missions_label.destroy()
         self.missions_label = Label(self.window, text=mission_info_text)
         # Cr�ation du label avec les informations des missions
         #mission_info_label = Label(self.window, text=mission_info_text)
         self.missions_label.pack(side="right",anchor="n", padx=10, pady=10)
-        #self.mission_info_label.text = mission_info_text
+        
 
 
         
-    def afficher_infos_coder(self,liste_coder):
+    def draw_infos_coder(self):
         # Creation de la chaine de texte pour les informations sur le coder
         mission_info_text = "Infos coder(s) :\n"
-        mission_info_text = AfficherInfosCoder(liste_coder)
+        mission_info_text = AfficherInfosCoder(self.game.liste_coder)
 
         self.coder_label.destroy()
         self.coder_label = Label(self.window, text=mission_info_text)
@@ -101,27 +107,28 @@ class WindowForGame:
    
 
 
-    def draw_missions(self, liste_missions):
+    def draw_missions(self):
         
-        for mission in liste_missions:
+        for mission in self.game.liste_missions:
+             
             mission_x, mission_y = mission.GetPosition()  # Obtient la position de la mission dans la grille
             mission_number = mission.GetSymbol()  # Récupère le numéro de la mission
-            
-       
+               
             # dans une l'interface graphique, les axes sont inversés, ce qui signifie que les coordonnées y de la grille deviennent les coordonnées x dans l'interface graphique, et vice versa.
             mission_x_graphic = mission_y * self.CELL_SIZE
             mission_y_graphic = mission_x * self.CELL_SIZE
-            
-            
-
+                
             # Dessin de la mission
             x1 = mission_x_graphic
             y1 = mission_y_graphic
             x2 = mission_x_graphic + self.CELL_SIZE
             y2 = mission_y_graphic + self.CELL_SIZE
             
-
-            self.canvas.create_rectangle(x1, y1, x2, y2, outline='black', fill='yellow')
+            fillcolor = 'yellow' 
+            if (mission.est_disponible() == False):
+                fillcolor = 'red'
+                
+            self.canvas.create_rectangle(x1, y1, x2, y2, outline='black', fill=fillcolor)
             self.canvas.create_text((x1 + x2) // 2, (y1 + y2) // 2, text=f"{mission_number}", fill='black')
 
     def ameliorer_energie_max(self,coder):
@@ -137,12 +144,17 @@ class WindowForGame:
             print("Bien Améliorer le niveau de codage")
            
     
-    def move_coder(self, event):
+    def move_coder_on_key_pressed(self, event):
         
         keyPressed = event.keysym
         moveDirection = (0, 0)
         current_coder_index = (self.round + 1) % self.game.nb_coder
         coder = self.game.liste_coder[current_coder_index]
+        
+        if current_coder_index == len(self.game.liste_coder)-1:
+            if IsGameOver(coder):
+                self.display_end()
+                return
         
         if keyPressed == "Up":
             moveDirection = (-1, 0)
@@ -163,7 +175,7 @@ class WindowForGame:
             self.btn_niveau_codage.destroy()  # Supprime le bouton s'il existe déjà
 
 
-        if CheckJobCenter(self.game.Board, coder):
+        if IsJobCenter(self.game.Board, coder.GetPosition()):
 
             self.btn_energie_max = Button(self.window, text="Améliorer l'énergie max", command=lambda: self.ameliorer_energie_max(coder)) # On utilise un lambda car sinon ne peut pas passer le coder en arguments.
             self.btn_energie_max.pack()
@@ -172,16 +184,27 @@ class WindowForGame:
             self.btn_niveau_codage.pack()
             coder.ResetEnergy()
 
-                
         self.draw()
+        self.draw_coder(coder)
 
-    
 
     def draw(self):
-        
+        self.draw_info_missions()
+        self.draw_infos_coder()
+        self.draw_missions()    
+     
+    def draw_coder(self, coder):
+        coder.Draw(self.canvas, self.CELL_SIZE)
+    
+    def play(self):
+        self.draw()
         for coder in self.game.liste_coder:
-            coder.Draw(self.canvas, self.CELL_SIZE)
- 
-        self.draw_missions(self.game.liste_missions) 
-        self.afficher_info_missions(self.game.liste_missions)
-        self.afficher_infos_coder(self.game.liste_coder)
+            self.draw_coder(coder)
+        self.window.mainloop()
+
+    def display_end(self):
+         self.canvas.create_text(10 * self.CELL_SIZE + self.CELL_SIZE // 2,
+                                10 * self.CELL_SIZE + self.CELL_SIZE // 2,
+                                text="GAME OVER",
+                                font=("Arial", 50),  # Exemple de police et de taille de texte
+                                fill="red") 
